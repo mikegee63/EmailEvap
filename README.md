@@ -1,0 +1,2 @@
+# EmailEvap
+Temporary email generator
