@@ -1,0 +1,73 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta charset="UTF-8"/>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/clock.png">
+  <title>World Time USA</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Ticker Container -->
+  <div class="ticker-container">
+    <div class="ticker">
+    </div>
+  </div>
+
+  <!-- Main Heading -->
+  <h1>Your time compared</h1>
+
+  <!-- Difference Display -->
+  <div id="difference"></div>
+
+  <!-- Main Clock Container -->
+  <div id="clock-container">
+    <div id="clock">--:--:--</div>
+    <div id="ampm"></div>
+  </div>
+
+  <!-- Subheading -->
+  <h2>Stratum 1 NTP Disciplined</h2>
+
+  <!-- Date Display -->
+  <div id="date">Loading date...</div>
+
+  <!-- City Times Container -->
+  <div class="city-container">
+    <div class="city">
+      <div class="city-name">Los Angeles</div>
+      <div class="city-time" id="LA-time">--:--:--</div>
+    </div>
+    <div class="city">
+      <div class="city-name">New York</div>
+      <div class="city-time" id="NY-time">--:--:--</div>
+    </div>
+    <div class="city">
+      <div class="city-name">London</div>
+      <div class="city-time" id="London-time">--:--:--</div>
+    </div>
+    <div class="city">
+      <div class="city-name">Paris</div>
+      <div class="city-time" id="Paris-time">--:--:--</div>
+    </div>
+    <div class="city">
+      <div class="city-name">Beijing</div>
+      <div class="city-time" id="Beijing-time">--:--:--</div>
+    </div>
+    <div class="city">
+      <div class="city-name">Tokyo</div>
+      <div class="city-time" id="Tokyo-time">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- Global Tooltip Element (placed outside the ticker container so it isn’t clipped) -->
+  <div id="global-tooltip"></div>
+
+  <!-- Load JavaScript with Cache Busting -->
+  <script src="timeSync.js?v=<?php echo time(); ?>"></script>
+<script src="ticker.js?v=<?php echo time(); ?>"></script>
+
+  
+</body>
+</html>
