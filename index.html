@@ -73,6 +73,7 @@
 
         let timer;
         let timeLeft = 600; // 10 minutes in seconds
+        let fetchInterval;
 
         async function generateEmail() {
             const response = await fetch(`/generate-email?userId=${userId}`);
@@ -81,11 +82,11 @@
             document.getElementById("email-display").innerText = userEmail;
             console.log(`Generated Email: ${userEmail}`);
             resetTimer();
-            fetchEmails();
+            startFetchingEmails();
         }
 
         async function fetchEmails() {
-            if (!userEmail) return;
+            if (!userEmail || timeLeft <= 0) return;
             console.log(`Fetching emails for: ${userEmail}`);
             const response = await fetch(`/get-emails?email=${userEmail}`);
             const data = await response.json();
@@ -111,6 +112,17 @@
             });
         }
 
+        function startFetchingEmails() {
+            if (fetchInterval) clearInterval(fetchInterval);
+            fetchInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    fetchEmails();
+                } else {
+                    clearInterval(fetchInterval);
+                }
+            }, 5000);
+        }
+
         function copyEmailToClipboard() {
             navigator.clipboard.writeText(userEmail).then(() => {
                 alert("Email copied to clipboard!");
@@ -123,11 +135,13 @@
             clearInterval(timer);
             timeLeft = 600; // Reset to 10 minutes
             updateTimerDisplay();
+            startFetchingEmails();
             timer = setInterval(() => {
                 timeLeft--;
                 updateTimerDisplay();
                 if (timeLeft <= 0) {
                     clearInterval(timer);
+                    clearInterval(fetchInterval); // Stop email fetching
                 }
             }, 1000);
         }
@@ -140,7 +154,6 @@
         window.onload = async () => {
             await generateEmail();
             resetTimer();
-            setInterval(fetchEmails, 5000); // Fetch new emails every 5 seconds
         };
     </script>
 </head>
