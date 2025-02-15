@@ -17,20 +17,20 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// ✅ Mailgun Webhook Route
+// ✅ Fix: Mailgun Webhook Route (POST request)
 app.post("/mailgun/webhook", (req, res) => {
   console.log("📩 Incoming Email:", req.body);
 
-  const recipient = req.body.recipient; // The email that received the message
-  const sender = req.body.sender; // The email sender
-  const subject = req.body.subject; // Email subject
-  const body = req.body["stripped-text"] || "No text content"; // Plain text content of the email
+  const recipient = req.body.recipient; // Email that received the message
+  const sender = req.body.sender;       // Sender's email address
+  const subject = req.body.subject;     // Email subject
+  const body = req.body["stripped-text"] || "No text content"; // Email content
 
   console.log(`📬 New email from ${sender} to ${recipient}`);
   console.log(`📌 Subject: ${subject}`);
   console.log(`📄 Message: ${body}`);
 
-  // Acknowledge the webhook request
+  // Acknowledge Mailgun request
   res.status(200).send("Webhook received!");
 });
 
