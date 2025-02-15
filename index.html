@@ -5,8 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temporary Email Viewer</title>
     <script>
-        async function fetchEmails(tempEmail) {
-            const response = await fetch(`/get-emails?email=${tempEmail}`);
+        let userEmail = "";
+        const userId = localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9);
+        localStorage.setItem("userId", userId);
+
+        let timer;
+        let timeLeft = 600; // 10 minutes in seconds
+
+        async function generateEmail() {
+            const response = await fetch(`/generate-email?userId=${userId}`);
+            const data = await response.json();
+            userEmail = data.email;
+            document.getElementById("email-display").innerText = `Your Temporary Email: ${userEmail}`;
+            resetTimer();
+            fetchEmails();
+        }
+
+        async function fetchEmails() {
+            if (!userEmail) return;
+            const response = await fetch(`/get-emails?email=${userEmail}`);
             const data = await response.json();
 
             let emailList = document.getElementById("email-list");
@@ -23,12 +40,37 @@
             });
         }
 
-        // Example: Fetch emails every 5 seconds for a test email
-        setInterval(() => fetchEmails("test123@emailvanish.com"), 5000);
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = 600; // Reset to 10 minutes
+            updateTimerDisplay();
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    generateEmail(); // Generate a new email when time runs out
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById("timer-display").innerText = `Time left: ${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}`;
+        }
+
+        // Automatically generate an email on page load
+        window.onload = () => {
+            generateEmail();
+            resetTimer();
+        };
+        setInterval(fetchEmails, 5000); // Fetch new emails every 5 seconds
     </script>
 </head>
 <body>
     <h1>Temporary Email Viewer</h1>
+    <div id="email-display">Loading email...</div>
+    <div id="timer-display">Time left: 10:00</div>
+    <button onclick="resetTimer()">Reset Timer</button>
     <div id="email-list">Loading emails...</div>
 </body>
 </html>
