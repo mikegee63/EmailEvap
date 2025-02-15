@@ -20,7 +20,6 @@ app.get("/", (req, res) => {
 // Temporary in-memory storage for received emails
 let emailStore = {}; 
 
-// ✅ Mailgun Webhook Route to Store Incoming Emails
 app.post("/mailgun/webhook", (req, res) => {
     console.log("📩 Incoming Email:", req.body);
 
@@ -39,8 +38,11 @@ app.post("/mailgun/webhook", (req, res) => {
     }
     emailStore[recipient].push({ sender, subject, body });
 
+    console.log("📂 Current Email Store:", JSON.stringify(emailStore, null, 2)); // Debugging line
+
     res.status(200).send("Webhook received!");
 });
+
 
 // ✅ API Endpoint for the Frontend to Fetch Emails
 app.get("/get-emails", (req, res) => {
