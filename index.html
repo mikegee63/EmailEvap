@@ -42,6 +42,7 @@
             border-radius: 5px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
+            word-wrap: break-word;
         }
         button {
             background-color: #007bff;
@@ -91,10 +92,11 @@
             data.messages.forEach(email => {
                 let emailItem = document.createElement("div");
                 emailItem.classList.add("email-item");
+                let messageWithLinks = email.body.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
                 emailItem.innerHTML = `
                     <strong>From:</strong> ${email.sender} <br>
                     <strong>Subject:</strong> ${email.subject} <br>
-                    <strong>Message:</strong> ${email.body} <br><hr>
+                    <strong>Message:</strong> ${messageWithLinks} <br><hr>
                 `;
                 emailList.appendChild(emailItem);
             });
