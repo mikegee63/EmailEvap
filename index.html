@@ -27,6 +27,15 @@
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .copy-icon {
+            width: 32px;
+            height: 32px;
+            margin-left: 10px;
+            cursor: pointer;
         }
         .timer {
             font-size: 16px;
@@ -102,6 +111,14 @@
             });
         }
 
+        function copyEmailToClipboard() {
+            navigator.clipboard.writeText(userEmail).then(() => {
+                alert("Email copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy email: ", err);
+            });
+        }
+
         function resetTimer() {
             clearInterval(timer);
             timeLeft = 600; // Reset to 10 minutes
@@ -111,7 +128,6 @@
                 updateTimerDisplay();
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    generateEmail(); // Generate a new email when time runs out
                 }
             }, 1000);
         }
@@ -131,7 +147,10 @@
 <body>
     <div class="container">
         <h1>Temporary Email Viewer</h1>
-        <div class="email-box">Your Temporary Email: <span id="email-display">Loading...</span></div>
+        <div class="email-box">
+            Your Temporary Email: <span id="email-display">Loading...</span>
+            <img src="copy.png" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
+        </div>
         <div class="timer">Time left: <span id="timer-display">10:00</span></div>
         <button onclick="resetTimer()">Reset Timer</button>
         <div class="email-list" id="email-list">Loading emails...</div>
