@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,9 +18,33 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Temporary in-memory storage for received emails
+// Temporary in-memory storage for received emails and active user sessions
 let emailStore = {}; 
+let userSessions = {}; // Fix: Ensure userSessions is defined
 
+// Function to generate a random disposable email
+function generateRandomEmail() {
+    return `${crypto.randomBytes(4).toString("hex")}@emailvanish.com`;
+}
+
+// ✅ API to Assign a Random Email Address to Users
+app.get("/generate-email", (req, res) => {
+    const userId = req.query.userId;
+
+    if (!userId) {
+        return res.status(400).json({ error: "Missing userId" });
+    }
+
+    if (userSessions[userId]) {
+        return res.json({ email: userSessions[userId] });
+    }
+
+    const randomEmail = generateRandomEmail();
+    userSessions[userId] = randomEmail;
+    res.json({ email: randomEmail });
+});
+
+// ✅ Mailgun Webhook Route to Store Incoming Emails
 app.post("/mailgun/webhook", (req, res) => {
     console.log("📩 Incoming Email:", req.body);
 
@@ -42,24 +67,6 @@ app.post("/mailgun/webhook", (req, res) => {
 
     res.status(200).send("Webhook received!");
 });
-
-// ✅ API to Assign a Random Email Address to Users
-app.get("/generate-email", (req, res) => {
-    const userId = req.query.userId;
-
-    if (!userId) {
-        return res.status(400).json({ error: "Missing userId" });
-    }
-
-    if (userSessions[userId]) {
-        return res.json({ email: userSessions[userId] });
-    }
-
-    const randomEmail = generateRandomEmail();
-    userSessions[userId] = randomEmail;
-    res.json({ email: randomEmail });
-});
-
 
 // ✅ API Endpoint for the Frontend to Fetch Emails
 app.get("/get-emails", (req, res) => {
