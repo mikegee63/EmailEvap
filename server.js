@@ -43,6 +43,23 @@ app.post("/mailgun/webhook", (req, res) => {
     res.status(200).send("Webhook received!");
 });
 
+// ✅ API to Assign a Random Email Address to Users
+app.get("/generate-email", (req, res) => {
+    const userId = req.query.userId;
+
+    if (!userId) {
+        return res.status(400).json({ error: "Missing userId" });
+    }
+
+    if (userSessions[userId]) {
+        return res.json({ email: userSessions[userId] });
+    }
+
+    const randomEmail = generateRandomEmail();
+    userSessions[userId] = randomEmail;
+    res.json({ email: randomEmail });
+});
+
 
 // ✅ API Endpoint for the Frontend to Fetch Emails
 app.get("/get-emails", (req, res) => {
