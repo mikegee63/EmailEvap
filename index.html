@@ -17,17 +17,27 @@
             const data = await response.json();
             userEmail = data.email;
             document.getElementById("email-display").innerText = `Your Temporary Email: ${userEmail}`;
+            console.log(`Generated Email: ${userEmail}`);
             resetTimer();
             fetchEmails();
         }
 
         async function fetchEmails() {
-            if (!userEmail) return;
+            if (!userEmail) {
+                console.log("No email assigned yet, skipping fetch.");
+                return;
+            }
+            console.log(`Fetching emails for: ${userEmail}`);
             const response = await fetch(`/get-emails?email=${userEmail}`);
             const data = await response.json();
+            console.log("API Response:", data);
 
             let emailList = document.getElementById("email-list");
             emailList.innerHTML = ""; // Clear existing emails
+
+            if (data.messages.length === 0) {
+                emailList.innerHTML = "No new emails.";
+            }
 
             data.messages.forEach(email => {
                 let emailItem = document.createElement("div");
@@ -59,11 +69,11 @@
         }
 
         // Automatically generate an email on page load
-        window.onload = () => {
-            generateEmail();
+        window.onload = async () => {
+            await generateEmail();
             resetTimer();
+            setInterval(fetchEmails, 5000); // Fetch new emails every 5 seconds
         };
-        setInterval(fetchEmails, 5000); // Fetch new emails every 5 seconds
     </script>
 </head>
 <body>
