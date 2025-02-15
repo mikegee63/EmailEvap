@@ -4,6 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temporary Email Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        .email-box {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            background: #e9e9e9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .timer {
+            font-size: 16px;
+            color: #d9534f;
+        }
+        .email-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .email-item {
+            background: #fafafa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
     <script>
         let userEmail = "";
         const userId = localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9);
@@ -16,17 +68,14 @@
             const response = await fetch(`/generate-email?userId=${userId}`);
             const data = await response.json();
             userEmail = data.email;
-            document.getElementById("email-display").innerText = `Your Temporary Email: ${userEmail}`;
+            document.getElementById("email-display").innerText = userEmail;
             console.log(`Generated Email: ${userEmail}`);
             resetTimer();
             fetchEmails();
         }
 
         async function fetchEmails() {
-            if (!userEmail) {
-                console.log("No email assigned yet, skipping fetch.");
-                return;
-            }
+            if (!userEmail) return;
             console.log(`Fetching emails for: ${userEmail}`);
             const response = await fetch(`/get-emails?email=${userEmail}`);
             const data = await response.json();
@@ -41,6 +90,7 @@
 
             data.messages.forEach(email => {
                 let emailItem = document.createElement("div");
+                emailItem.classList.add("email-item");
                 emailItem.innerHTML = `
                     <strong>From:</strong> ${email.sender} <br>
                     <strong>Subject:</strong> ${email.subject} <br>
@@ -77,10 +127,12 @@
     </script>
 </head>
 <body>
-    <h1>Temporary Email Viewer</h1>
-    <div id="email-display">Loading email...</div>
-    <div id="timer-display">Time left: 10:00</div>
-    <button onclick="resetTimer()">Reset Timer</button>
-    <div id="email-list">Loading emails...</div>
+    <div class="container">
+        <h1>Temporary Email Viewer</h1>
+        <div class="email-box">Your Temporary Email: <span id="email-display">Loading...</span></div>
+        <div class="timer">Time left: <span id="timer-display">10:00</span></div>
+        <button onclick="resetTimer()">Reset Timer</button>
+        <div class="email-list" id="email-list">Loading emails...</div>
+    </div>
 </body>
 </html>
