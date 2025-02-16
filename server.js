@@ -46,14 +46,6 @@ app.get("/generate-email", async (req, res) => {
 
 // ✅ Mailgun Webhook Route to Store Incoming Emails
 app.post("/mailgun/webhook", async (req, res) => {
-    const emailSize = req.headers["content-length"] || 0;
-    const maxSize = 5 * 1024 * 1024; // 5MB limit
-    
-    if (emailSize > maxSize) {
-        console.log("🚨 Email too large:", emailSize);
-        return res.status(400).send("Email size exceeds the limit");
-    }
-
     console.log("📩 Incoming Email:", req.body);
 
     const recipient = req.body.recipient;
@@ -61,12 +53,21 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Sanitize HTML but properly preserve embedded links
+    // ✅ Sanitize HTML while keeping embedded links correctly formatted
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
-        allowedAttributes: { "a": ["href"] },
+        allowedAttributes: { "a": ["href", "target"] },
         transformTags: {
-            'a': sanitizeHtml.simpleTransform("a", { target: "_blank", rel: "noopener noreferrer" })
+            "a": (tagName, attribs) => {
+                return {
+                    tagName: "a",
+                    attribs: {
+                        href: attribs.href || "#",
+                        target: "_blank",
+                        rel: "noopener noreferrer"
+                    }
+                };
+            }
         }
     });
 
