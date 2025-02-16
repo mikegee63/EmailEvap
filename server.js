@@ -44,6 +44,7 @@ app.get("/generate-email", async (req, res) => {
     res.json({ email });
 });
 
+// ✅ Mailgun Webhook Route to Store Incoming Emails
 app.post("/mailgun/webhook", async (req, res) => {
     const emailSize = req.headers["content-length"] || 0;
     const maxSize = 5 * 1024 * 1024; // 5MB limit
@@ -60,10 +61,10 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Fix the issue where links are being prefixed incorrectly
+    // ✅ Fix duplicate links and preserve embedded hyperlinks correctly
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
-        allowedAttributes: { "a": ["href", "target", "rel"] },
+        allowedAttributes: { "a": ["href"] },
         transformTags: {
             'a': (tagName, attribs) => {
                 if (attribs.href && attribs.href.startsWith("http")) {
@@ -74,17 +75,16 @@ app.post("/mailgun/webhook", async (req, res) => {
                             target: "_blank",
                             rel: "noopener noreferrer"
                         },
-                        text: attribs.href // Ensure only the correct URL is embedded
+                        text: attribs.href // Ensure the correct URL is embedded
                     };
                 }
-                return {
-                    tagName: "a",
-                    attribs: {},
-                    text: "[Invalid Link]"
-                };
+                return { tagName: "span", text: "[Invalid Link]" };
             }
         }
     });
+
+    // 🛠 Strip out any remaining unwanted HTML fragments
+    bodyHtml = bodyHtml.replace(/target="_blank" rel="noopener noreferrer"/g, "").trim();
 
     console.log(`📬 New email from ${sender} to ${recipient}`);
     console.log(`📌 Subject: ${subject}`);
@@ -100,6 +100,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
     res.status(200).send("Webhook received!");
 });
+
 
 
 
