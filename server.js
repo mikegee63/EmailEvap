@@ -61,7 +61,7 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Fix Link Formatting Issue
+    // ✅ Preserve Embedded Links Correctly
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
         allowedAttributes: {
@@ -81,7 +81,8 @@ app.post("/mailgun/webhook", async (req, res) => {
                         href: attribs.href,
                         target: "_blank",
                         rel: "noopener noreferrer"
-                    }
+                    },
+                    text: attribs.href // Ensure the link text is preserved
                 };
             }
         }
