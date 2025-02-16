@@ -64,15 +64,14 @@ app.post("/mailgun/webhook", async (req, res) => {
     // ✅ Preserve Embedded Links Correctly
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
-        allowedAttributes: {
-            "a": ["href", "target", "rel"]
-        },
+        allowedAttributes: { "a": ["href", "target", "rel"] },
         transformTags: {
-            "a": (tagName, attribs) => {
+            "a": (tagName, attribs, text) => {
                 if (!attribs.href || !attribs.href.startsWith("http")) {
                     return {
                         tagName: "a",
-                        attribs: { href: "#", target: "_blank", rel: "noopener noreferrer" }
+                        attribs: { href: "#", target: "_blank", rel: "noopener noreferrer" },
+                        text
                     };
                 }
                 return {
@@ -82,7 +81,7 @@ app.post("/mailgun/webhook", async (req, res) => {
                         target: "_blank",
                         rel: "noopener noreferrer"
                     },
-                    text: attribs.href // Ensure the link text is preserved
+                    text: text || attribs.href // Ensure the clickable text remains
                 };
             }
         }
