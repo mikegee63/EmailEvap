@@ -46,54 +46,39 @@ app.get("/generate-email", async (req, res) => {
 
 // ✅ Mailgun Webhook Route to Store Incoming Emails
 app.post("/mailgun/webhook", async (req, res) => {
-    console.log("📩 Incoming Email:", req.body);
+  console.log("📩 Incoming Email:", req.body);
 
-    const recipient = req.body.recipient;
-    const sender = req.body.sender;
-    const subject = req.body.subject;
-    let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
+  const recipient = req.body.recipient;
+  const sender = req.body.sender;
+  const subject = req.body.subject;
+  let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Fix for Link Handling in HTML
-    bodyHtml = sanitizeHtml(bodyHtml, {
-        allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
-        allowedAttributes: {
-            "a": ["href", "target", "rel"]
-        },
-        transformTags: {
-            "a": (tagName, attribs) => {
-                if (attribs.href) {
-                    return {
-                        tagName: "a",
-                        attribs: {
-                            href: attribs.href,
-                            target: "_blank",
-                            rel: "noopener noreferrer"
-                        }
-                    };
-                }
-                return { tagName, attribs };
-            }
-        }
-    });
+  // Sanitize the HTML without transforming the <a> tags.
+  bodyHtml = sanitizeHtml(bodyHtml, {
+    allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
+    allowedAttributes: {
+      "a": ["href"] // Allow only the href attribute for <a> tags.
+    }
+  });
 
-    console.log(`📬 New email from ${sender} to ${recipient}`);
-    console.log(`📌 Subject: ${subject}`);
-    console.log(`📄 Cleaned Message: ${bodyHtml}`);
+  // Now, add target and rel attributes to all <a> tags.
+  // This regex finds every <a ...> and injects our attributes.
+  bodyHtml = bodyHtml.replace(/<a\s+/g, '<a target="_blank" rel="noopener noreferrer" ');
 
-    if (!recipient) return res.status(400).send("Invalid recipient");
+  console.log(`📬 New email from ${sender} to ${recipient}`);
+  console.log(`📌 Subject: ${subject}`);
+  console.log(`📄 Cleaned Message: ${bodyHtml}`);
 
-    // ✅ Store email in Redis
-    const emailKey = `emails:${recipient}`;
-    const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp: Date.now() });
-    await redisClient.lPush(emailKey, emailData);
-    await redisClient.expire(emailKey, 600); // Emails expire in 10 minutes
+  if (!recipient) return res.status(400).send("Invalid recipient");
 
-    res.status(200).send("Webhook received!");
+  // Store email in Redis.
+  const emailKey = `emails:${recipient}`;
+  const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp: Date.now() });
+  await redisClient.lPush(emailKey, emailData);
+  await redisClient.expire(emailKey, 600); // Emails expire in 10 minutes
+
+  res.status(200).send("Webhook received!");
 });
-
-
-
-
 
 
 // ✅ API Endpoint for the Frontend to Fetch Emails
