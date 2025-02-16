@@ -2,13 +2,20 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
+const redis = require("redis");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Redis client setup
+const redisClient = redis.createClient({
+    url: process.env.REDIS_URL || "redis://localhost:6379"
+});
+redisClient.connect().catch(console.error);
+
 // Middleware to parse incoming JSON and form-encoded data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "10mb" })); // Allow larger payloads
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 
 // Serve static files (CSS, JS, images) directly from the root
 app.use(express.static(__dirname));
@@ -18,63 +25,63 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Temporary in-memory storage for received emails and active user sessions
-let emailStore = {}; 
-let userSessions = {}; // Fix: Ensure userSessions is defined
-
 // Function to generate a random disposable email
 function generateRandomEmail() {
     return `${crypto.randomBytes(4).toString("hex")}@emailvanish.com`;
 }
 
 // ✅ API to Assign a Random Email Address to Users
-app.get("/generate-email", (req, res) => {
+app.get("/generate-email", async (req, res) => {
     const userId = req.query.userId;
+    if (!userId) return res.status(400).json({ error: "Missing userId" });
 
-    if (!userId) {
-        return res.status(400).json({ error: "Missing userId" });
+    let email = await redisClient.get(userId);
+    if (!email) {
+        email = generateRandomEmail();
+        await redisClient.setEx(userId, 600, email); // Store email with 10-minute expiration
     }
-
-    if (userSessions[userId]) {
-        return res.json({ email: userSessions[userId] });
-    }
-
-    const randomEmail = generateRandomEmail();
-    userSessions[userId] = randomEmail;
-    res.json({ email: randomEmail });
+    res.json({ email });
 });
 
 // ✅ Mailgun Webhook Route to Store Incoming Emails
-app.post("/mailgun/webhook", (req, res) => {
+app.post("/mailgun/webhook", async (req, res) => {
+    const emailSize = req.headers["content-length"] || 0;
+    const maxSize = 5 * 1024 * 1024; // 5MB limit
+    
+    if (emailSize > maxSize) {
+        console.log("🚨 Email too large:", emailSize);
+        return res.status(400).send("Email size exceeds the limit");
+    }
+
     console.log("📩 Incoming Email:", req.body);
 
-    const recipient = req.body.recipient; // The temp email address
-    const sender = req.body.sender; // Who sent the email
-    const subject = req.body.subject; // Email subject
-    const body = req.body["stripped-text"] || "No text content"; // Email content
+    const recipient = req.body.recipient;
+    const sender = req.body.sender;
+    const subject = req.body.subject;
+    const body = req.body["stripped-text"] || "No text content";
 
     console.log(`📬 New email from ${sender} to ${recipient}`);
     console.log(`📌 Subject: ${subject}`);
     console.log(`📄 Message: ${body}`);
 
-    // Store email in memory (organized by recipient address)
-    if (!emailStore[recipient]) {
-        emailStore[recipient] = [];
-    }
-    emailStore[recipient].push({ sender, subject, body });
+    if (!recipient) return res.status(400).send("Invalid recipient");
 
-    console.log("📂 Current Email Store:", JSON.stringify(emailStore, null, 2)); // Debugging line
+    // Store email in Redis
+    const emailKey = `emails:${recipient}`;
+    const emailData = JSON.stringify({ sender, subject, body, timestamp: Date.now() });
+    await redisClient.lPush(emailKey, emailData);
+    await redisClient.expire(emailKey, 600); // Emails expire in 10 minutes
 
     res.status(200).send("Webhook received!");
 });
 
 // ✅ API Endpoint for the Frontend to Fetch Emails
-app.get("/get-emails", (req, res) => {
+app.get("/get-emails", async (req, res) => {
     const email = req.query.email;
-    if (!email || !emailStore[email]) {
-        return res.json({ messages: [] }); // Return empty if no emails found
-    }
-    res.json({ messages: emailStore[email] });
+    if (!email) return res.json({ messages: [] });
+
+    const messages = await redisClient.lRange(`emails:${email}`, 0, -1);
+    res.json({ messages: messages.map(msg => JSON.parse(msg)) });
 });
 
 // Start the server
