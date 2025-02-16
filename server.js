@@ -51,21 +51,27 @@ app.post("/mailgun/webhook", async (req, res) => {
   const recipient = req.body.recipient;
   const sender = req.body.sender;
   const subject = req.body.subject;
-  // Use the HTML body if available, else fall back to plain text.
+  // Prefer the HTML version if available.
   let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-  // 1. Sanitize the content but do NOT allow <a> tags.
+  // Log the raw email body for debugging.
+  console.log("Raw email body:", bodyHtml);
+
+  // Remove any extraneous encoded fragment that looks like "<a href="
+  bodyHtml = bodyHtml.replace(/%3Ca%20href=/gi, '');
+
+  // Sanitize the HTML without transforming <a> tags.
   bodyHtml = sanitizeHtml(bodyHtml, {
-    allowedTags: ["b", "i", "em", "strong", "p", "br"],
-    allowedAttributes: {}
+    allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
+    allowedAttributes: { 
+      "a": ["href", "target", "rel"] 
+    },
+    // Do not perform any tag transformations.
+    transformTags: {}
   });
 
-  // 2. Remove any leftover <a> tags (just in case).
-  bodyHtml = bodyHtml.replace(/<a[^>]*>/g, "").replace(/<\/a>/g, "");
-
-  // 3. Convert any URL (starting with http or https) into a clickable link.
-  // This regex finds sequences starting with http(s):// until a whitespace, double quote, or < is encountered.
-  bodyHtml = bodyHtml.replace(/(https?:\/\/[^\s"<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  // Add target and rel attributes to <a> tags if missing.
+  bodyHtml = bodyHtml.replace(/<a\s+(?!.*target=)(?!.*rel=)/gi, '<a target="_blank" rel="noopener noreferrer" ');
 
   console.log(`📬 New email from ${sender} to ${recipient}`);
   console.log(`📌 Subject: ${subject}`);
@@ -73,7 +79,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
   if (!recipient) return res.status(400).send("Invalid recipient");
 
-  // Store email in Redis.
+  // Store the cleaned email in Redis.
   const emailKey = `emails:${recipient}`;
   const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp: Date.now() });
   await redisClient.lPush(emailKey, emailData);
@@ -81,6 +87,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
   res.status(200).send("Webhook received!");
 });
+
 
 
 
