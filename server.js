@@ -59,23 +59,23 @@ app.post("/mailgun/webhook", async (req, res) => {
     const recipient = req.body.recipient;
     const sender = req.body.sender;
     const subject = req.body.subject;
-    let bodyText = req.body["stripped-text"] || "No content";
+    let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Sanitize text: Remove headers and unnecessary metadata
-    bodyText = sanitizeHtml(bodyText, {
-        allowedTags: [],
-        allowedAttributes: {}
+    // ✅ Sanitize HTML but keep embedded links properly formatted
+    bodyHtml = sanitizeHtml(bodyHtml, {
+        allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
+        allowedAttributes: { "a": ["href"] }
     });
 
     console.log(`📬 New email from ${sender} to ${recipient}`);
     console.log(`📌 Subject: ${subject}`);
-    console.log(`📄 Cleaned Message: ${bodyText}`);
+    console.log(`📄 Cleaned Message: ${bodyHtml}`);
 
     if (!recipient) return res.status(400).send("Invalid recipient");
 
     // Store email in Redis
     const emailKey = `emails:${recipient}`;
-    const emailData = JSON.stringify({ sender, subject, body: bodyText, timestamp: Date.now() });
+    const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp: Date.now() });
     await redisClient.lPush(emailKey, emailData);
     await redisClient.expire(emailKey, 600); // Emails expire in 10 minutes
 
