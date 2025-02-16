@@ -61,17 +61,20 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Properly preserve embedded links
+    // ✅ Sanitize HTML while keeping proper embedded links
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
         allowedAttributes: { "a": ["href", "target", "rel"] },
+        exclusiveFilter: function(frame) {
+            return !frame.text.trim() && frame.tag !== "a"; // Ensure empty tags are removed
+        },
         transformTags: {
-            "a": (tagName, attribs, text) => {
+            "a": (tagName, attribs) => {
                 if (!attribs.href || !attribs.href.startsWith("http")) {
                     return {
                         tagName: "a",
                         attribs: { href: "#", target: "_blank", rel: "noopener noreferrer" },
-                        text
+                        text: attribs.href || "Invalid Link"
                     };
                 }
                 return {
@@ -80,8 +83,7 @@ app.post("/mailgun/webhook", async (req, res) => {
                         href: attribs.href,
                         target: "_blank",
                         rel: "noopener noreferrer"
-                    },
-                    text: text || "Click here" // Ensures correct link formatting
+                    }
                 };
             }
         }
