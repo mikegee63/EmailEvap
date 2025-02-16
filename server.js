@@ -44,49 +44,47 @@ app.get("/generate-email", async (req, res) => {
     res.json({ email });
 });
 
-// ✅ Mailgun Webhook Route to Store Incoming Emails
 app.post("/mailgun/webhook", async (req, res) => {
-    const emailSize = req.headers["content-length"] || 0;
-    const maxSize = 5 * 1024 * 1024; // 5MB limit
-    
-    if (emailSize > maxSize) {
-        console.log("🚨 Email too large:", emailSize);
-        return res.status(400).send("Email size exceeds the limit");
-    }
-
     console.log("📩 Incoming Email:", req.body);
 
     const recipient = req.body.recipient;
     const sender = req.body.sender;
     const subject = req.body.subject;
+
+    // First, determine which email body to use
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Sanitize HTML while keeping proper embedded links
+    // ✅ Fix Embedded Links: Ensure proper `<a>` tag handling
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
         allowedAttributes: { "a": ["href", "target", "rel"] },
-        exclusiveFilter: function(frame) {
-            return !frame.text.trim() && frame.tag !== "a"; // Ensure empty tags are removed
-        },
         transformTags: {
             "a": (tagName, attribs) => {
-                if (!attribs.href || !attribs.href.startsWith("http")) {
+                if (attribs.href && attribs.href.startsWith("http")) {
                     return {
                         tagName: "a",
-                        attribs: { href: "#", target: "_blank", rel: "noopener noreferrer" },
+                        attribs: {
+                            href: attribs.href,
+                            target: "_blank",
+                            rel: "noopener noreferrer"
+                        }
+                    };
+                } else {
+                    return {
+                        tagName: "a",
                         text: attribs.href || "Invalid Link"
                     };
                 }
-                return {
-                    tagName: "a",
-                    attribs: {
-                        href: attribs.href,
-                        target: "_blank",
-                        rel: "noopener noreferrer"
-                    }
-                };
             }
         }
+    });
+
+    // ✅ Prevent Duplicate Links in Stored Email Body
+    bodyHtml = bodyHtml.replace(/(https?:\/\/[^\s]+)/g, (match, url) => {
+        if (bodyHtml.includes(`<a href="${url}">`)) {
+            return ""; // Remove duplicate raw URL if it's already embedded
+        }
+        return match;
     });
 
     console.log(`📬 New email from ${sender} to ${recipient}`);
@@ -103,6 +101,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
     res.status(200).send("Webhook received!");
 });
+
 
 // ✅ API Endpoint for the Frontend to Fetch Emails
 app.get("/get-emails", async (req, res) => {
