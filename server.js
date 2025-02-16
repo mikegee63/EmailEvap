@@ -59,37 +59,23 @@ app.post("/mailgun/webhook", async (req, res) => {
     const recipient = req.body.recipient;
     const sender = req.body.sender;
     const subject = req.body.subject;
-    let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
+    let bodyText = req.body["stripped-text"] || "No content";
 
-    // ✅ Sanitize HTML: Allow images and links while preserving embedded content
-    bodyHtml = sanitizeHtml(bodyHtml, {
-        allowedTags: ["b", "i", "em", "strong", "a", "img", "p", "br", "table", "tr", "td", "th", "ul", "li", "ol"],
-        allowedAttributes: { 
-            "a": ["href", "target"], 
-            "img": ["src", "alt", "width", "height", "style"],
-            "table": ["border", "cellpadding", "cellspacing"],
-            "td": ["colspan", "rowspan"],
-            "th": ["colspan", "rowspan"]
-        },
-        allowedStyles: {
-            "*": {
-                "color": [/^#(0-9A-Fa-f)+$/],
-                "text-align": [/^left$/, /^right$/, /^center$/, /^justify$/],
-                "width": [/^\d+(?:px|%)$/],
-                "height": [/^\d+(?:px|%)$/]
-            }
-        }
+    // ✅ Sanitize text: Remove headers and unnecessary metadata
+    bodyText = sanitizeHtml(bodyText, {
+        allowedTags: [],
+        allowedAttributes: {}
     });
 
     console.log(`📬 New email from ${sender} to ${recipient}`);
     console.log(`📌 Subject: ${subject}`);
-    console.log(`📄 Cleaned Message: ${bodyHtml}`);
+    console.log(`📄 Cleaned Message: ${bodyText}`);
 
     if (!recipient) return res.status(400).send("Invalid recipient");
 
     // Store email in Redis
     const emailKey = `emails:${recipient}`;
-    const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp: Date.now() });
+    const emailData = JSON.stringify({ sender, subject, body: bodyText, timestamp: Date.now() });
     await redisClient.lPush(emailKey, emailData);
     await redisClient.expire(emailKey, 600); // Emails expire in 10 minutes
 
