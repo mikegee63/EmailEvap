@@ -61,12 +61,23 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Sanitize HTML: Keep links & images but remove dangerous elements
+    // ✅ Sanitize HTML: Allow images and links while preserving embedded content
     bodyHtml = sanitizeHtml(bodyHtml, {
-        allowedTags: ["b", "i", "em", "strong", "a", "img", "p", "br"],
+        allowedTags: ["b", "i", "em", "strong", "a", "img", "p", "br", "table", "tr", "td", "th", "ul", "li", "ol"],
         allowedAttributes: { 
             "a": ["href", "target"], 
-            "img": ["src", "alt", "width", "height"] 
+            "img": ["src", "alt", "width", "height", "style"],
+            "table": ["border", "cellpadding", "cellspacing"],
+            "td": ["colspan", "rowspan"],
+            "th": ["colspan", "rowspan"]
+        },
+        allowedStyles: {
+            "*": {
+                "color": [/^#(0-9A-Fa-f)+$/],
+                "text-align": [/^left$/, /^right$/, /^center$/, /^justify$/],
+                "width": [/^\d+(?:px|%)$/],
+                "height": [/^\d+(?:px|%)$/]
+            }
         }
     });
 
