@@ -84,6 +84,16 @@ app.post("/mailgun/webhook", async (req, res) => {
 
     res.status(200).send("Webhook received!");
 });
+// ✅ API to List All Stored Emails
+app.get("/list-emails", async (req, res) => {
+    try {
+        const keys = await redisClient.keys("emails:*");
+        res.json({ storedEmails: keys });
+    } catch (error) {
+        console.error("🚨 Error fetching stored emails:", error);
+        res.status(500).json({ error: "Failed to retrieve stored emails" });
+    }
+});
 
 // ✅ API Endpoint for the Frontend to Fetch Emails
 app.get("/get-emails", async (req, res) => {
