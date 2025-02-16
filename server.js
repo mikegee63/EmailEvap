@@ -53,7 +53,7 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Sanitize HTML while keeping links properly formatted
+    // ✅ Fix for Link Handling in HTML
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
         allowedAttributes: {
@@ -61,15 +61,17 @@ app.post("/mailgun/webhook", async (req, res) => {
         },
         transformTags: {
             "a": (tagName, attribs) => {
-                if (!attribs.href) return { tagName, attribs };
-                return {
-                    tagName,
-                    attribs: {
-                        href: attribs.href,
-                        target: "_blank",
-                        rel: "noopener noreferrer"
-                    }
-                };
+                if (attribs.href) {
+                    return {
+                        tagName: "a",
+                        attribs: {
+                            href: attribs.href,
+                            target: "_blank",
+                            rel: "noopener noreferrer"
+                        }
+                    };
+                }
+                return { tagName, attribs };
             }
         }
     });
@@ -80,7 +82,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
     if (!recipient) return res.status(400).send("Invalid recipient");
 
-    // Store email in Redis
+    // ✅ Store email in Redis
     const emailKey = `emails:${recipient}`;
     const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp: Date.now() });
     await redisClient.lPush(emailKey, emailData);
@@ -88,6 +90,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
     res.status(200).send("Webhook received!");
 });
+
 
 
 
