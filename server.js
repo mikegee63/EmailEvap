@@ -46,14 +46,6 @@ app.get("/generate-email", async (req, res) => {
 
 // ✅ Mailgun Webhook Route to Store Incoming Emails
 app.post("/mailgun/webhook", async (req, res) => {
-    const emailSize = req.headers["content-length"] || 0;
-    const maxSize = 5 * 1024 * 1024; // 5MB limit
-    
-    if (emailSize > maxSize) {
-        console.log("🚨 Email too large:", emailSize);
-        return res.status(400).send("Email size exceeds the limit");
-    }
-
     console.log("📩 Incoming Email:", req.body);
 
     const recipient = req.body.recipient;
@@ -61,30 +53,26 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Fix duplicate links and preserve embedded hyperlinks correctly
+    // ✅ Sanitize HTML while keeping links properly formatted
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
-        allowedAttributes: { "a": ["href"] },
+        allowedAttributes: {
+            "a": ["href", "target", "rel"]
+        },
         transformTags: {
-            'a': (tagName, attribs) => {
-                if (attribs.href && attribs.href.startsWith("http")) {
-                    return {
-                        tagName: "a",
-                        attribs: {
-                            href: attribs.href,
-                            target: "_blank",
-                            rel: "noopener noreferrer"
-                        },
-                        text: attribs.href // Ensure the correct URL is embedded
-                    };
-                }
-                return { tagName: "span", text: "[Invalid Link]" };
+            "a": (tagName, attribs) => {
+                if (!attribs.href) return { tagName, attribs };
+                return {
+                    tagName,
+                    attribs: {
+                        href: attribs.href,
+                        target: "_blank",
+                        rel: "noopener noreferrer"
+                    }
+                };
             }
         }
     });
-
-    // 🛠 Strip out any remaining unwanted HTML fragments
-    bodyHtml = bodyHtml.replace(/target="_blank" rel="noopener noreferrer"/g, "").trim();
 
     console.log(`📬 New email from ${sender} to ${recipient}`);
     console.log(`📌 Subject: ${subject}`);
@@ -100,6 +88,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
     res.status(200).send("Webhook received!");
 });
+
 
 
 
