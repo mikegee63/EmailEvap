@@ -35,8 +35,8 @@
       word-break: break-all;
     }
     .copy-icon {
-      width: 64px;
-      height: 64px;
+      width: 32px;
+      height: 32px;
       cursor: pointer;
     }
     .timer {
@@ -66,6 +66,13 @@
     }
     button:hover {
       background-color: #0056b3;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
     }
     @media (max-width: 600px) {
       .email-box {
@@ -113,7 +120,6 @@
       data.messages.forEach(email => {
         let emailItem = document.createElement("div");
         emailItem.classList.add("email-item");
-        // Use the sanitized HTML from the backend directly.
         emailItem.innerHTML = `
           <strong>From:</strong> ${email.sender} <br>
           <strong>Subject:</strong> ${email.subject} <br>
