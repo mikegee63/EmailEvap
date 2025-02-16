@@ -1,184 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temporary Email Viewer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        .container {
-            max-width: 90%;
-            width: 600px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            margin: auto;
-        }
-        .email-box {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            background: #e9e9e9;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            word-break: break-all;
-        }
-        .copy-icon {
-            width: 64px;
-            height: 64px;
-            cursor: pointer;
-        }
-        .timer {
-            font-size: 16px;
-            color: #d9534f;
-        }
-        .email-list {
-            text-align: left;
-            margin-top: 20px;
-        }
-        .email-item {
-            background: #fafafa;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            word-wrap: break-word;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        @media (max-width: 600px) {
-            .email-box {
-                flex-direction: column;
-                text-align: center;
-            }
-            .copy-icon {
-                margin-top: 10px;
-            }
-        }
-    </style>
-    <script>
-        let userEmail = "";
-        const userId = localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9);
-        localStorage.setItem("userId", userId);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temporary Email Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 90%;
+      width: 600px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      margin: auto;
+    }
+    .email-box {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      background: #e9e9e9;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      word-break: break-all;
+    }
+    .copy-icon {
+      width: 64px;
+      height: 64px;
+      cursor: pointer;
+    }
+    .timer {
+      font-size: 16px;
+      color: #d9534f;
+    }
+    .email-list {
+      text-align: left;
+      margin-top: 20px;
+    }
+    .email-item {
+      background: #fafafa;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      word-wrap: break-word;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    @media (max-width: 600px) {
+      .email-box {
+        flex-direction: column;
+        text-align: center;
+      }
+      .copy-icon {
+        margin-top: 10px;
+      }
+    }
+  </style>
+  <script>
+    let userEmail = "";
+    const userId = localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("userId", userId);
 
-        let timer;
-        let timeLeft = 600; // 10 minutes in seconds
-        let fetchInterval;
+    let timer;
+    let timeLeft = 600; // 10 minutes in seconds
+    let fetchInterval;
 
-        async function generateEmail() {
-            const response = await fetch(`/generate-email?userId=${userId}`);
-            const data = await response.json();
-            userEmail = data.email;
-            document.getElementById("email-display").innerText = userEmail;
-            console.log(`Generated Email: ${userEmail}`);
-            resetTimer();
-            startFetchingEmails();
+    async function generateEmail() {
+      const response = await fetch(`/generate-email?userId=${userId}`);
+      const data = await response.json();
+      userEmail = data.email;
+      document.getElementById("email-display").innerText = userEmail;
+      console.log(`Generated Email: ${userEmail}`);
+      resetTimer();
+      startFetchingEmails();
+    }
+
+    async function fetchEmails() {
+      if (!userEmail || timeLeft <= 0) return;
+      console.log(`Fetching emails for: ${userEmail}`);
+      const response = await fetch(`/get-emails?email=${userEmail}`);
+      const data = await response.json();
+      console.log("API Response:", data);
+
+      let emailList = document.getElementById("email-list");
+      emailList.innerHTML = ""; // Clear existing emails
+
+      if (data.messages.length === 0) {
+        emailList.innerHTML = "No new emails.";
+      }
+
+      data.messages.forEach(email => {
+        let emailItem = document.createElement("div");
+        emailItem.classList.add("email-item");
+        // Use the sanitized HTML from the backend directly.
+        emailItem.innerHTML = `
+          <strong>From:</strong> ${email.sender} <br>
+          <strong>Subject:</strong> ${email.subject} <br>
+          <strong>Message:</strong> ${email.body} <br><hr>
+        `;
+        emailList.appendChild(emailItem);
+      });
+    }
+
+    function startFetchingEmails() {
+      if (fetchInterval) clearInterval(fetchInterval);
+      fetchInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          fetchEmails();
+        } else {
+          clearInterval(fetchInterval);
         }
+      }, 15000);
+    }
 
-        async function fetchEmails() {
-            if (!userEmail || timeLeft <= 0) return;
-            console.log(`Fetching emails for: ${userEmail}`);
-            const response = await fetch(`/get-emails?email=${userEmail}`);
-            const data = await response.json();
-            console.log("API Response:", data);
+    function copyEmailToClipboard() {
+      navigator.clipboard.writeText(userEmail).then(() => {
+        alert("Email copied to clipboard!");
+      }).catch(err => {
+        console.error("Failed to copy email: ", err);
+      });
+    }
 
-            let emailList = document.getElementById("email-list");
-            emailList.innerHTML = ""; // Clear existing emails
-
-            if (data.messages.length === 0) {
-                emailList.innerHTML = "No new emails.";
-            }
-
-            data.messages.forEach(email => {
-                let emailItem = document.createElement("div");
-                emailItem.classList.add("email-item");
-                let messageWithLinks = email.body.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-                emailItem.innerHTML = `
-                    <strong>From:</strong> ${email.sender} <br>
-                    <strong>Subject:</strong> ${email.subject} <br>
-                    <strong>Message:</strong> ${messageWithLinks} <br><hr>
-                `;
-                emailList.appendChild(emailItem);
-            });
+    function resetTimer() {
+      clearInterval(timer);
+      timeLeft = 600; // Reset to 10 minutes
+      updateTimerDisplay();
+      startFetchingEmails();
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          clearInterval(fetchInterval);
         }
+      }, 1000);
+    }
 
-        function startFetchingEmails() {
-            if (fetchInterval) clearInterval(fetchInterval);
-            fetchInterval = setInterval(() => {
-                if (timeLeft > 0) {
-                    fetchEmails();
-                } else {
-                    clearInterval(fetchInterval);
-                }
-            }, 15000);
-        }
+    function updateTimerDisplay() {
+      document.getElementById("timer-display").innerText =
+        `Time left: ${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}`;
+    }
 
-        function copyEmailToClipboard() {
-            navigator.clipboard.writeText(userEmail).then(() => {
-                alert("Email copied to clipboard!");
-            }).catch(err => {
-                console.error("Failed to copy email: ", err);
-            });
-        }
-
-        function resetTimer() {
-            clearInterval(timer);
-            timeLeft = 600; // Reset to 10 minutes
-            updateTimerDisplay();
-            startFetchingEmails();
-            timer = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    clearInterval(fetchInterval); // Stop email fetching
-                }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            document.getElementById("timer-display").innerText = `Time left: ${Math.floor(timeLeft / 60)}:${(timeLeft % 60).toString().padStart(2, '0')}`;
-        }
-
-        // Automatically generate an email on page load
-        window.onload = async () => {
-            await generateEmail();
-            resetTimer();
-        };
-    </script>
+    window.onload = async () => {
+      await generateEmail();
+      resetTimer();
+    };
+  </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Temporary Email Viewer</h1>
-        <div class="email-box">
-            <span>Your Temporary Email:</span>
-            <span id="email-display">Loading...</span>
-            <img src="copy.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
-        </div>
-        <div class="timer">Time left: <span id="timer-display">10:00</span></div>
-        <button onclick="resetTimer()">Reset Timer</button>
-        <div class="email-list" id="email-list">Loading emails...</div>
+  <div class="container">
+    <h1>Temporary Email Viewer</h1>
+    <div class="email-box">
+      <span>Your Temporary Email:</span>
+      <span id="email-display">Loading...</span>
+      <img src="copy.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
     </div>
+    <div class="timer">Time left: <span id="timer-display">10:00</span></div>
+    <button onclick="resetTimer()">Reset Timer</button>
+    <div class="email-list" id="email-list">Loading emails...</div>
+  </div>
 </body>
 </html>
