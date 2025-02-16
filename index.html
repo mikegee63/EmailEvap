@@ -12,7 +12,8 @@
             padding: 20px;
         }
         .container {
-            max-width: 600px;
+            max-width: 90%;
+            width: 600px;
             background: white;
             padding: 20px;
             border-radius: 10px;
@@ -29,12 +30,13 @@
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            word-break: break-all;
         }
         .copy-icon {
-            width: 64px;
-            height: 64px;
-            margin-left: 10px;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
         }
         .timer {
@@ -64,6 +66,15 @@
         }
         button:hover {
             background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            .email-box {
+                flex-direction: column;
+                text-align: center;
+            }
+            .copy-icon {
+                margin-top: 10px;
+            }
         }
     </style>
     <script>
@@ -161,8 +172,9 @@
     <div class="container">
         <h1>Temporary Email Viewer</h1>
         <div class="email-box">
-            Your Temporary Email: <span id="email-display">Loading...</span>
-            <img src="copy.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
+            <span>Your Temporary Email:</span>
+            <span id="email-display">Loading...</span>
+            <img src="copy.png" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
         </div>
         <div class="timer">Time left: <span id="timer-display">10:00</span></div>
         <button onclick="resetTimer()">Reset Timer</button>
