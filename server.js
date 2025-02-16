@@ -23,7 +23,7 @@ app.use(express.static(__dirname));
 
 // Ensure the root URL loads index.html
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // Function to generate a random disposable email
@@ -44,11 +44,11 @@ app.get("/generate-email", async (req, res) => {
     res.json({ email });
 });
 
-// ✅ Mailgun Webhook Route to Store Incoming Emails with Formatting Fix
+// ✅ Mailgun Webhook Route to Store Incoming Emails
 app.post("/mailgun/webhook", async (req, res) => {
     const emailSize = req.headers["content-length"] || 0;
     const maxSize = 5 * 1024 * 1024; // 5MB limit
-
+    
     if (emailSize > maxSize) {
         console.log("🚨 Email too large:", emailSize);
         return res.status(400).send("Email size exceeds the limit");
@@ -61,7 +61,7 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Fix: Sanitize HTML while keeping images and links clickable
+    // ✅ Sanitize HTML: Keep links & images but remove dangerous elements
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "img", "p", "br"],
         allowedAttributes: { 
@@ -76,7 +76,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
     if (!recipient) return res.status(400).send("Invalid recipient");
 
-    // ✅ Store sanitized email in Redis
+    // Store email in Redis
     const emailKey = `emails:${recipient}`;
     const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp: Date.now() });
     await redisClient.lPush(emailKey, emailData);
@@ -85,7 +85,7 @@ app.post("/mailgun/webhook", async (req, res) => {
     res.status(200).send("Webhook received!");
 });
 
-// ✅ API Endpoint for the Frontend to Fetch Emails (Proper HTML Display)
+// ✅ API Endpoint for the Frontend to Fetch Emails
 app.get("/get-emails", async (req, res) => {
     const email = req.query.email;
     if (!email) return res.json({ messages: [] });
@@ -94,18 +94,7 @@ app.get("/get-emails", async (req, res) => {
     res.json({ messages: messages.map(msg => JSON.parse(msg)) });
 });
 
-// ✅ API to List All Stored Emails in Redis (Debugging)
-app.get("/list-emails", async (req, res) => {
-    try {
-        const keys = await redisClient.keys("emails:*");
-        res.json({ storedEmails: keys });
-    } catch (error) {
-        console.error("🚨 Error fetching stored emails:", error);
-        res.status(500).json({ error: "Failed to retrieve stored emails" });
-    }
-});
-
 // Start the server
 app.listen(PORT, () => {
-    console.log(`🚀 Server is running at http://localhost:${PORT}`);
+  console.log(`🚀 Server is running at http://localhost:${PORT}`);
 });
