@@ -61,10 +61,13 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Sanitize HTML but keep embedded links properly formatted
+    // ✅ Sanitize HTML but properly preserve embedded links
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
-        allowedAttributes: { "a": ["href"] }
+        allowedAttributes: { "a": ["href"] },
+        transformTags: {
+            'a': sanitizeHtml.simpleTransform("a", { target: "_blank", rel: "noopener noreferrer" })
+        }
     });
 
     console.log(`📬 New email from ${sender} to ${recipient}`);
