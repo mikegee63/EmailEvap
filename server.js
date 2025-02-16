@@ -51,19 +51,21 @@ app.post("/mailgun/webhook", async (req, res) => {
   const recipient = req.body.recipient;
   const sender = req.body.sender;
   const subject = req.body.subject;
+  // Use the HTML body if available, else fall back to plain text.
   let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-  // Sanitize the HTML without transforming the <a> tags.
+  // 1. Sanitize the content but do NOT allow <a> tags.
   bodyHtml = sanitizeHtml(bodyHtml, {
-    allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
-    allowedAttributes: {
-      "a": ["href"] // Allow only the href attribute for <a> tags.
-    }
+    allowedTags: ["b", "i", "em", "strong", "p", "br"],
+    allowedAttributes: {}
   });
 
-  // Now, add target and rel attributes to all <a> tags.
-  // This regex finds every <a ...> and injects our attributes.
-  bodyHtml = bodyHtml.replace(/<a\s+/g, '<a target="_blank" rel="noopener noreferrer" ');
+  // 2. Remove any leftover <a> tags (just in case).
+  bodyHtml = bodyHtml.replace(/<a[^>]*>/g, "").replace(/<\/a>/g, "");
+
+  // 3. Convert any URL (starting with http or https) into a clickable link.
+  // This regex finds sequences starting with http(s):// until a whitespace, double quote, or < is encountered.
+  bodyHtml = bodyHtml.replace(/(https?:\/\/[^\s"<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
 
   console.log(`📬 New email from ${sender} to ${recipient}`);
   console.log(`📌 Subject: ${subject}`);
@@ -79,6 +81,7 @@ app.post("/mailgun/webhook", async (req, res) => {
 
   res.status(200).send("Webhook received!");
 });
+
 
 
 // ✅ API Endpoint for the Frontend to Fetch Emails
