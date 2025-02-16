@@ -15,10 +15,10 @@ const redisClient = redis.createClient({
 redisClient.connect().catch(console.error);
 
 // Middleware to parse incoming JSON and form-encoded data
-app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.json({ limit: "10mb" })); // Allow larger payloads
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 
-// Serve static files
+// Serve static files (CSS, JS, images) directly from the root
 app.use(express.static(__dirname));
 
 // Ensure the root URL loads index.html
@@ -31,7 +31,7 @@ function generateRandomEmail() {
     return `${crypto.randomBytes(4).toString("hex")}@emailvanish.com`;
 }
 
-// ✅ API to Assign a Random Email Address
+// ✅ API to Assign a Random Email Address to Users
 app.get("/generate-email", async (req, res) => {
     const userId = req.query.userId;
     if (!userId) return res.status(400).json({ error: "Missing userId" });
@@ -39,7 +39,7 @@ app.get("/generate-email", async (req, res) => {
     let email = await redisClient.get(userId);
     if (!email) {
         email = generateRandomEmail();
-        await redisClient.setEx(userId, 600, email);
+        await redisClient.setEx(userId, 600, email); // Store email with 10-minute expiration
     }
     res.json({ email });
 });
@@ -48,7 +48,7 @@ app.get("/generate-email", async (req, res) => {
 app.post("/mailgun/webhook", async (req, res) => {
     const emailSize = req.headers["content-length"] || 0;
     const maxSize = 5 * 1024 * 1024; // 5MB limit
-
+    
     if (emailSize > maxSize) {
         console.log("🚨 Email too large:", emailSize);
         return res.status(400).send("Email size exceeds the limit");
@@ -61,7 +61,7 @@ app.post("/mailgun/webhook", async (req, res) => {
     const subject = req.body.subject;
     let bodyHtml = req.body["body-html"] || req.body["stripped-text"] || "No content";
 
-    // ✅ Preserve Embedded Links Correctly
+    // ✅ Properly preserve embedded links
     bodyHtml = sanitizeHtml(bodyHtml, {
         allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
         allowedAttributes: { "a": ["href", "target", "rel"] },
@@ -81,7 +81,7 @@ app.post("/mailgun/webhook", async (req, res) => {
                         target: "_blank",
                         rel: "noopener noreferrer"
                     },
-                    text: text || attribs.href // Ensure the clickable text remains
+                    text: text || "Click here" // Ensures correct link formatting
                 };
             }
         }
@@ -102,7 +102,7 @@ app.post("/mailgun/webhook", async (req, res) => {
     res.status(200).send("Webhook received!");
 });
 
-// ✅ API to Retrieve Stored Emails
+// ✅ API Endpoint for the Frontend to Fetch Emails
 app.get("/get-emails", async (req, res) => {
     const email = req.query.email;
     if (!email) return res.json({ messages: [] });
