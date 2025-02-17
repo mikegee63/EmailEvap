@@ -17,32 +17,31 @@
       text-align: center;
     }
 
-    /* Gradient background */
+    /* Gradient background for the entire page */
     .gradient-bg {
       background: linear-gradient(to bottom, #e9e9e9 11%, #333333 73%);
       min-height: 100vh;
-      padding: 20px;
       box-sizing: border-box;
+      padding: 20px;
     }
 
-    /* Container with no white box */
+    /* White container box restored */
     .container {
       max-width: 90%;
       width: 600px;
       margin: 0 auto;
       padding: 20px;
-      /* Remove white box and shadow */
-      background: none;
-      border-radius: 0;
-      box-shadow: none;
+      background: #fff; /* White background */
+      border-radius: 10px; /* Rounded corners */
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     }
 
     /* Black email box with white text */
     .email-box {
       font-size: 18px;
       font-weight: bold;
-      color: #fff; /* White text */
-      background: #000; /* Pure black background */
+      color: #fff;  /* White text */
+      background: #000;  /* Black background */
       padding: 10px;
       border-radius: 5px;
       margin-bottom: 10px;
@@ -233,14 +232,14 @@
 
       <button onclick="resetTimer()">Reset Timer</button>
       <div class="email-list" id="email-list">Loading emails...</div>
-    </div>
 
-    <footer id="page-footer">
-      <p>
-        <a href="privacy-policy.html">Privacy Policy</a> |
-        <a href="https://emailvanish.com">Home</a>
-      </p>
-    </footer>
+      <footer id="page-footer" style="margin-top: 20px;">
+        <p>
+          <a href="privacy-policy.html">Privacy Policy</a> |
+          <a href="https://emailvanish.com">Home</a>
+        </p>
+      </footer>
+    </div>
   </div>
 </body>
 </html>
