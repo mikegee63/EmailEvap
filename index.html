@@ -38,8 +38,8 @@
       word-break: break-all;
     }
     .copy-icon {
-      width: 32px;
-      height: 32px;
+      width: 64px;
+      height: 64px;
       cursor: pointer;
     }
     .timer {
@@ -87,6 +87,7 @@
       }
     }
   </style>
+  
   <script>
     let userEmail = "";
     const userId = localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9);
@@ -193,6 +194,11 @@
       <span id="email-display">Loading...</span>
       <img src="copy.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
     </div>
+    Free Anonymous Temporary Email
+
+Why Use This Service?
+
+Sometimes you need an email address to sign up for a website—but you don’t want to risk exposing your personal inbox to spam or unwanted emails. Our temporary email service gives you a disposable address you can use for account verifications and registrations, keeping your real email private and secure. Best of all, it's completely free. Enjoy a hassle‑free, anonymous email experience!
     <div class="timer">Time left: <span id="timer-display">10:00</span></div>
     <button onclick="resetTimer()">Reset Timer</button>
     <div class="email-list" id="email-list">Loading emails...</div>
