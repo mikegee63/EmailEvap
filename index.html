@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="Keywords" content="temporary email, disposable email, anonymous email, free temporary email, temporary email address, throwaway email, disposable inbox, email privacy, spam protection, secure email, email alias, temporary inbox, email verification, anonymous disposable email, privacy protection email, quick email, free disposable email, secure disposable email, temporary email service, email generator">
@@ -13,7 +12,13 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    /* Gradient background wrapper */
+    .gradient-bg {
+      background: linear-gradient(to bottom, #e9e9e9 11%, #333333 73%);
+      min-height: 100vh;
       padding: 20px;
     }
     .container {
@@ -181,39 +186,37 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <h1>Temporary Email Viewer</h1>
-    <amp-ad width="100vw" height="320"
-     type="adsense"
-     data-ad-client="ca-pub-1604406379780489"
-     data-ad-slot="2006841536"
-     data-auto-format="rspv"
-     data-full-width="">
-  <div overflow=""></div>
-</amp-ad>
-    <div class="email-box">
-      <span>Your Temporary Email:</span>
-      <span id="email-display">Loading...</span>
-      <img src="copy.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
+  <div class="gradient-bg">
+    <div class="container">
+      <h1>Temporary Email Viewer</h1>
+      <amp-ad width="100vw" height="320"
+        type="adsense"
+        data-ad-client="ca-pub-1604406379780489"
+        data-ad-slot="2006841536"
+        data-auto-format="rspv"
+        data-full-width="">
+        <div overflow=""></div>
+      </amp-ad>
+      <div class="email-box">
+        <span>Your Temporary Email:</span>
+        <span id="email-display">Loading...</span>
+        <img src="copy.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
+      </div>
+      <p>
+        Anonymous Free Temporary Email<br><br>
+        <strong>Why Use This Service?</strong><br>
+        Sometimes you need an email address to sign up for a website or other info, but you don’t want to expose your personal inbox to spam or unwanted emails. Our temporary email service gives you a disposable address you can use for account verifications and registrations, keeping your real email private and secure. Best of all, it's completely free. Enjoy a spam‑free, anonymous email experience!
+      </p>
+      <div class="timer">Time left: <span id="timer-display">10:00</span></div>
+      <button onclick="resetTimer()">Reset Timer</button>
+      <div class="email-list" id="email-list">Loading emails...</div>
     </div>
-    Anonymous Free Temporary Email
-
-Why Use This Service?
-
-Sometimes you need an email address to sign up for a website or other info, but you don’t want to expose your personal inbox to spam or unwanted emails. Our temporary email service gives you a disposable address you can use for account verifications and registrations, keeping your real email private and secure. Best of all, it's completely free. Enjoy a spam‑free, anonymous email experience!
-    <div class="timer">Time left: <span id="timer-display">10:00</span></div>
-    <button onclick="resetTimer()">Reset Timer</button>
-    <div class="email-list" id="email-list">Loading emails...</div>
+    <footer id="page-footer">
+      <p>
+        <a href="privacy-policy.html">Privacy Policy</a> |
+        <a href="https://emailvanish.com">Home</a>
+      </p>
+    </footer>
   </div>
- </div>
-    <div>
-        <footer id="page-footer" class="opacity-0">
-          <p>
-          <a href="privacy-policy.html">Privacy Policy</a> |
-        </p>
-        </footer>
-    </div>
-
-    
 </body>
 </html>
