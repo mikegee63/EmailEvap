@@ -8,9 +8,12 @@
   <meta name="Description" content="EmailVanish.com is a free, secure temporary email service designed to protect your privacy online. Our platform generates anonymous, disposable email addresses instantly, allowing you to sign up for websites, verify accounts, and receive communications without exposing your personal email. Avoid spam, safeguard your identity, and enjoy hassle‑free online registrations with EmailVanish.com.">
   <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
   <title>Temporary Email Viewer</title>
-  
-  <!-- Include Font Awesome for the envelope icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <!-- Font Awesome for envelope icon -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  >
 
   <style>
     /* Page resets and font */
@@ -29,7 +32,7 @@
       padding: 20px;
     }
 
-    /* White container box restored */
+    /* The original main white container */
     .container {
       max-width: 90%;
       width: 600px;
@@ -40,7 +43,7 @@
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Black email box with white text */
+    /* The existing black email box for the address */
     .email-box {
       font-size: 18px;
       font-weight: bold;
@@ -68,20 +71,6 @@
       color: #d9534f;
     }
 
-    .email-list {
-      text-align: left;
-      margin-top: 20px;
-    }
-
-    .email-item {
-      background: #fafafa;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      word-wrap: break-word;
-    }
-
     button {
       background-color: #007bff;
       color: white;
@@ -91,7 +80,6 @@
       cursor: pointer;
       margin-top: 10px;
     }
-
     button:hover {
       background-color: #0056b3;
     }
@@ -100,7 +88,6 @@
       color: #007bff;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
@@ -115,30 +102,51 @@
       }
     }
 
-    /* New inbox box styles */
-    .inbox-box {
-      width: 100%;
-      height: 30px;  /* adjust height as needed */
+    /*  NEW BOX OUTSIDE MAIN CONTAINER  */
+    .inbox-container {
+      max-width: 90%;
+      width: 600px;
+      margin: 5px auto 0;  /* 5px gap from the main container */
+      background: #000;    /* black background */
       border: 4px solid #cc0000;
       border-radius: 10px;
-      margin-top: 5px;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      padding: 5px;
+      color: #fff;         /* white text */
       box-sizing: border-box;
     }
 
-    .inbox-label {
+    /*  The top "header" row in the new box (30px tall)  */
+    .inbox-header {
+      height: 30px;
+      display: flex;
+      align-items: center;
       font-weight: bold;
+      padding: 0 10px; /* small horizontal padding */
+      box-sizing: border-box;
+    }
+    .inbox-header .inbox-label {
       margin-right: 10px;
     }
 
-    .inbox-icon {
-      display: inline-block;
+    /*  The area below the header, which expands as emails arrive */
+    .email-list {
+      /* We do NOT fix the height here, so it grows naturally */
+      padding: 10px; /* a bit of spacing around email items */
+      background: #000; /* keep black background if you prefer */
+      box-sizing: border-box;
     }
 
-    /* Shake animation */
+    /* Each email item */
+    .email-item {
+      background: #222;  /* slightly lighter black or #fafafa if you want white */
+      color: #fff;       /* text color if background is dark */
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #333;
+      word-wrap: break-word;
+    }
+
+    /* Shake animation for the envelope icon */
     @keyframes shake {
       0% { transform: translate(0, 0); }
       25% { transform: translate(2px, 0); }
@@ -146,20 +154,19 @@
       75% { transform: translate(-2px, 0); }
       100% { transform: translate(0, 0); }
     }
-
-    /* This class will be added temporarily when a new email arrives */
     .shake {
       animation: shake 0.5s ease-in-out;
     }
+
   </style>
-  
+
   <script>
     let userEmail = "";
     const userId = localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9);
     localStorage.setItem("userId", userId);
 
     let timer;
-    let timeLeft = 600; // 10 minutes in seconds
+    let timeLeft = 600; // 10 minutes
     let fetchInterval;
 
     async function generateEmail() {
@@ -167,24 +174,22 @@
       const data = await response.json();
       userEmail = data.email;
       document.getElementById("email-display").innerText = userEmail;
-      console.log(`Generated Email: ${userEmail}`);
       resetTimer();
       startFetchingEmails();
     }
 
     async function fetchEmails() {
       if (!userEmail || timeLeft <= 0) return;
-      console.log(`Fetching emails for: ${userEmail}`);
       const response = await fetch(`/get-emails?email=${userEmail}`);
       const data = await response.json();
-      console.log("API Response:", data);
 
       let emailList = document.getElementById("email-list");
-      emailList.innerHTML = ""; // Clear existing emails
+      emailList.innerHTML = ""; // Clear existing content
 
       if (data.messages.length === 0) {
         emailList.innerHTML = "No new emails, wait for it...";
       } else {
+        // Display each incoming message
         data.messages.forEach(email => {
           let emailItem = document.createElement("div");
           emailItem.classList.add("email-item");
@@ -196,9 +201,8 @@
           emailList.appendChild(emailItem);
         });
 
-        // Trigger shake animation on the envelope icon in the inbox box
+        // Trigger the shake animation on the envelope icon
         const inboxIcon = document.getElementById("inbox-icon");
-        // Remove and re-add the shake class to restart the animation
         inboxIcon.classList.remove("shake");
         void inboxIcon.offsetWidth;  // force reflow
         inboxIcon.classList.add("shake");
@@ -226,7 +230,7 @@
 
     function resetTimer() {
       clearInterval(timer);
-      timeLeft = 600; // Reset to 10 minutes
+      timeLeft = 600;
       updateTimerDisplay();
       startFetchingEmails();
       timer = setInterval(() => {
@@ -260,37 +264,36 @@
 </head>
 <body>
   <div class="gradient-bg">
+
+    <!-- 1) MAIN BIG WHITE BOX (existing) -->
     <div class="container">
       <h1>Temporary Email Generator</h1>
-      <amp-ad width="100vw" height="320"
+      <amp-ad
+        width="100vw"
+        height="320"
         type="adsense"
         data-ad-client="ca-pub-1604406379780489"
         data-ad-slot="2006841536"
         data-auto-format="rspv"
-        data-full-width="">
+        data-full-width=""
+      >
         <div overflow=""></div>
       </amp-ad>
-      
-      <!-- Email Box -->
+
+      <!-- Black email box with the generated address -->
       <div class="email-box">
         <span>Your Temporary Email:</span>
         <span id="email-display">Loading...</span>
         <img src="copy.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
       </div>
-      
-      <!-- New Inbox Box -->
-      <div class="inbox-box">
-        <span class="inbox-label">INBOX:</span>
-        <span class="inbox-icon" id="inbox-icon">
-          <i class="fas fa-envelope fa-2x"></i>
-        </span>
-      </div>
 
       <p>
-        <strong>Incoming Mail Appears Below</strong><br>
-        Anonymous Free Temporary Email<br><br>
         <strong>Why Use This Service?</strong><br>
-        Sometimes you need an email address to sign up for a website or other info, but you don’t want to expose your personal inbox to spam or unwanted emails. Our temporary email service gives you a disposable address you can use for account verifications and registrations, keeping your real email private and secure. Best of all, it's completely free. Enjoy a spam‑free, anonymous email experience!
+        Sometimes you need an email address to sign up for a website or other info, but 
+        you don’t want to expose your personal inbox to spam or unwanted emails. Our 
+        temporary email service gives you a disposable address you can use for account 
+        verifications and registrations, keeping your real email private and secure. 
+        Best of all, it's completely free. Enjoy a spam‑free, anonymous email experience!
       </p>
 
       <p class="timer">
@@ -298,16 +301,32 @@
       </p>
 
       <button onclick="resetTimer()">Reset Timer</button>
-      <div class="email-list" id="email-list">Loading emails...</div>
-
-      <footer id="page-footer" style="margin-top: 20px;">
-        <p>
-          <a href="about.html">About</a> |
-          <a href="privacy-policy.html">Privacy Policy</a> |
-          <a href="https://emailvanish.com">Home</a>
-        </p>
-      </footer>
     </div>
+    <!-- end main container -->
+
+    <!-- 2) NEW BOX OUTSIDE THE MAIN CONTAINER -->
+    <div class="inbox-container">
+      <!-- 30px-tall top row with label and envelope icon -->
+      <div class="inbox-header">
+        <span class="inbox-label">INBOX:</span>
+        <span id="inbox-icon" style="margin-left: 10px;">
+          <i class="fas fa-envelope fa-2x"></i>
+        </span>
+      </div>
+
+      <!-- Emails will appear here, causing the box to grow -->
+      <div class="email-list" id="email-list">
+        Loading emails...
+      </div>
+    </div>
+
+    <footer id="page-footer" style="margin-top: 20px;">
+      <p>
+        <a href="about.html">About</a> |
+        <a href="privacy-policy.html">Privacy Policy</a> |
+        <a href="https://emailvanish.com">Home</a>
+      </p>
+    </footer>
   </div>
 </body>
 </html>
