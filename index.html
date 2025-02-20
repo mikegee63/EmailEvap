@@ -68,10 +68,28 @@
       cursor: pointer;
     }
 
-    /* Original small timer text (you can remove if you want only the big timer box) */
-    .timer {
-      font-size: 16px;
-      color: #d9534f;
+     /* NEW: Half-width black box with red border for large green timer */
+    .timer-box {
+      /* half the width of the 600px container => 300px */
+      width: 300px;
+      margin: 10px auto; /* center it horizontally, with some vertical spacing */
+      background: #000;
+      border: 4px solid #cc0000;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 60px; /* Adjust as needed */
+    }
+
+    /* The big digital timer text */
+    #big-timer {
+      color: #00ff00;    /* bright green (terminal-like) */
+      font-size: 36px;   /* large text */
+      font-family: monospace; /* "digital" style; use a custom font for more authenticity */
+      font-weight: bold;
+      line-height: 1;    /* keep text snug */
+    }
     }
 
     button {
@@ -142,29 +160,6 @@
       margin-bottom: 10px;
       border: 1px solid #ddd;
       word-wrap: break-word;
-    }
-
-    /* NEW: Half-width black box with red border for large green timer */
-    .timer-box {
-      /* half the width of the 600px container => 300px */
-      width: 300px;
-      margin: 10px auto; /* center it horizontally, with some vertical spacing */
-      background: #000;
-      border: 4px solid #cc0000;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 60px; /* Adjust as needed */
-    }
-
-    /* The big digital timer text */
-    #big-timer {
-      color: #00ff00;    /* bright green (terminal-like) */
-      font-size: 36px;   /* large text */
-      font-family: monospace; /* "digital" style; use a custom font for more authenticity */
-      font-weight: bold;
-      line-height: 1;    /* keep text snug */
     }
 
     /* Example violent shake animation */
