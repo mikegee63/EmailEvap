@@ -271,9 +271,7 @@
       const seconds = (timeLeft % 60).toString().padStart(2, '0');
       const displayText = `${minutes}:${seconds}`;
 
-      // Old small timer
-      document.getElementById("timer-display").innerText = `Time left: ${displayText}`;
-
+  
       // NEW big green timer
       const bigTimer = document.getElementById("big-timer");
       if (bigTimer) {
