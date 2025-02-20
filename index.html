@@ -8,6 +8,10 @@
   <meta name="Description" content="EmailVanish.com is a free, secure temporary email service designed to protect your privacy online. Our platform generates anonymous, disposable email addresses instantly, allowing you to sign up for websites, verify accounts, and receive communications without exposing your personal email. Avoid spam, safeguard your identity, and enjoy hassle‑free online registrations with EmailVanish.com.">
   <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
   <title>Temporary Email Viewer</title>
+  
+  <!-- Include Font Awesome for the envelope icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
   <style>
     /* Page resets and font */
     body {
@@ -31,27 +35,27 @@
       width: 600px;
       margin: 0 auto;
       padding: 20px;
-      background: #fff; /* White background */
-      border-radius: 10px; /* Rounded corners */
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 
     /* Black email box with white text */
     .email-box {
-  font-size: 18px;
-  font-weight: bold;
-  color: #fff;          /* White text */
-  background: #000;     /* Black background */
-  padding: 10px;
-  border: 4px solid #cc0000;  /* 4px red border */
-  border-radius: 10px;        /* More rounded corners */
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  word-break: break-all;
-}
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      background: #000;
+      padding: 10px;
+      border: 4px solid #cc0000;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      word-break: break-all;
+    }
 
     .copy-icon {
       width: 64px;
@@ -110,6 +114,43 @@
         margin-top: 10px;
       }
     }
+
+    /* New inbox box styles */
+    .inbox-box {
+      width: 100%;
+      height: 30px;  /* adjust height as needed */
+      border: 4px solid #cc0000;
+      border-radius: 10px;
+      margin-top: 5px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+
+    .inbox-label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .inbox-icon {
+      display: inline-block;
+    }
+
+    /* Shake animation */
+    @keyframes shake {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(2px, 0); }
+      50% { transform: translate(0, 0); }
+      75% { transform: translate(-2px, 0); }
+      100% { transform: translate(0, 0); }
+    }
+
+    /* This class will be added temporarily when a new email arrives */
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
   </style>
   
   <script>
@@ -143,18 +184,25 @@
 
       if (data.messages.length === 0) {
         emailList.innerHTML = "No new emails, wait for it...";
-      }
+      } else {
+        data.messages.forEach(email => {
+          let emailItem = document.createElement("div");
+          emailItem.classList.add("email-item");
+          emailItem.innerHTML = `
+            <strong>From:</strong> ${email.sender} <br>
+            <strong>Subject:</strong> ${email.subject} <br>
+            <strong>Message:</strong> ${email.body} <br><hr>
+          `;
+          emailList.appendChild(emailItem);
+        });
 
-      data.messages.forEach(email => {
-        let emailItem = document.createElement("div");
-        emailItem.classList.add("email-item");
-        emailItem.innerHTML = `
-          <strong>From:</strong> ${email.sender} <br>
-          <strong>Subject:</strong> ${email.subject} <br>
-          <strong>Message:</strong> ${email.body} <br><hr>
-        `;
-        emailList.appendChild(emailItem);
-      });
+        // Trigger shake animation on the envelope icon in the inbox box
+        const inboxIcon = document.getElementById("inbox-icon");
+        // Remove and re-add the shake class to restart the animation
+        inboxIcon.classList.remove("shake");
+        void inboxIcon.offsetWidth;  // force reflow
+        inboxIcon.classList.add("shake");
+      }
     }
 
     function startFetchingEmails() {
@@ -201,12 +249,13 @@
       resetTimer();
     };
   </script>
+  
   <!-- Standard favicon -->
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<!-- PNG fallback -->
-<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-<!-- Apple Touch Icon -->
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- PNG fallback -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
 </head>
 <body>
@@ -222,10 +271,19 @@
         <div overflow=""></div>
       </amp-ad>
       
+      <!-- Email Box -->
       <div class="email-box">
         <span>Your Temporary Email:</span>
         <span id="email-display">Loading...</span>
         <img src="copy.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
+      </div>
+      
+      <!-- New Inbox Box -->
+      <div class="inbox-box">
+        <span class="inbox-label">INBOX:</span>
+        <span class="inbox-icon" id="inbox-icon">
+          <i class="fas fa-envelope fa-2x"></i>
+        </span>
       </div>
 
       <p>
