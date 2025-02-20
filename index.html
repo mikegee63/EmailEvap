@@ -102,9 +102,9 @@
       }
     }
 
-    /* NEW: The lower box, outside the main container */
-    .inbox-container {
-      /* Match the same width as .container */
+    /* Box style (light gray, red border, rounded corners) */
+    .inbox-container,
+    .content-container {  /* We'll reuse the same style for both boxes */
       max-width: 90%;
       width: 600px;
       margin: 10px auto;      /* center it, with some top/bottom margin */
@@ -116,7 +116,7 @@
       box-sizing: border-box;
     }
 
-    /* A 30px-high header row at the top of the new box */
+    /* The 30px-high header row for the inbox box */
     .inbox-header {
       height: 30px;
       display: flex;
@@ -124,16 +124,15 @@
       font-weight: bold;
       padding: 0 10px;
       box-sizing: border-box;
-      margin-bottom: 10px; /* space between the header and the emails */
+      margin-bottom: 10px;
     }
 
-    /* The email list is inside the same box, so it grows with content */
+    /* Email list inside the inbox container */
     .email-list {
       text-align: left;
     }
-
     .email-item {
-      background: #fff;       /* or #f0f0f0, if you want a subtle difference */
+      background: #fff;
       color: #000;
       padding: 10px;
       border-radius: 5px;
@@ -299,7 +298,7 @@
     </div>
     <!-- end .container -->
 
-    <!-- 2) LOWER BOX (same width, fully rounded, white or light-gray background) -->
+    <!-- 2) INBOX BOX (same style) -->
     <div class="inbox-container">
       <!-- 30px tall row for the label and icon -->
       <div class="inbox-header">
@@ -313,6 +312,41 @@
       <div class="email-list" id="email-list">
         Loading emails...
       </div>
+    </div>
+
+    <!-- 3) NEW BOX FOR ADDITIONAL CONTENT -->
+    <div class="content-container">
+      <h2>Additional Information</h2>
+      <p style="text-align:left;">
+        Here you can add as much content as you like—articles, FAQs, usage instructions,
+        or any other text or images to make your site more robust. This helps with SEO 
+        and ensures there’s enough content for AdSense requirements.
+      </p>
+      <p style="text-align:left;">
+        For example, you might describe:
+        <ul>
+          <li>How your temporary email service works</li>
+          <li>Tips for preventing spam</li>
+          <li>Privacy and security best practices</li>
+        </ul>
+      </p>
+      <p style="text-align:left;">
+        Keep adding more text or other elements here to expand the box. The 
+        <strong>.content-container</strong> will grow automatically as needed.
+      </p>
+
+      <!-- Optionally, you can also embed another ad here -->
+      <!--
+      <amp-ad width="100vw" height="320"
+        type="adsense"
+        data-ad-client="ca-pub-XXXXXXXXXXXXXX"
+        data-ad-slot="XXXXXXXXXX"
+        data-auto-format="rspv"
+        data-full-width=""
+      >
+        <div overflow=""></div>
+      </amp-ad>
+      -->
     </div>
 
     <footer id="page-footer" style="margin-top: 20px;">
