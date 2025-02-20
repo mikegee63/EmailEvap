@@ -9,7 +9,7 @@
   <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
   <title>Temporary Email Viewer</title>
 
-  <!-- Font Awesome for envelope icon -->
+  <!-- Font Awesome for the envelope icon -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -32,7 +32,7 @@
       padding: 20px;
     }
 
-    /* The original main white container */
+    /* The original top container (white box) */
     .container {
       max-width: 90%;
       width: 600px;
@@ -43,7 +43,7 @@
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* The existing black email box for the address */
+    /* The existing black email box */
     .email-box {
       font-size: 18px;
       font-weight: bold;
@@ -102,62 +102,57 @@
       }
     }
 
-    /*  NEW BOX OUTSIDE MAIN CONTAINER  */
+    /* NEW: The lower box, outside the main container */
     .inbox-container {
+      /* Match the same width as .container */
       max-width: 90%;
       width: 600px;
-      margin: 15px auto 0;  /* 5px gap from the main container */
-      background: #ffffff;    /* white background */
+      margin: 10px auto;      /* center it, with some top/bottom margin */
+      padding: 20px;          /* same padding as the top container */
+      background: #f9f9f9;    /* light gray (or #fff for pure white) */
       border: 4px solid #cc0000;
-      border-radius: 10px;
-      color: #000000;         /* black text */
+      border-radius: 10px;    /* fully rounded corners */
+      color: #000;            /* black text */
       box-sizing: border-box;
     }
 
-    /*  The top "header" row in the new box (30px tall)  */
+    /* A 30px-high header row at the top of the new box */
     .inbox-header {
       height: 30px;
       display: flex;
       align-items: center;
       font-weight: bold;
-      padding: 0 10px; /* small horizontal padding */
+      padding: 0 10px;
       box-sizing: border-box;
-    }
-    .inbox-header .inbox-label {
-      margin-right: 10px;
+      margin-bottom: 10px; /* space between the header and the emails */
     }
 
-    /*  The area below the header, which expands as emails arrive */
+    /* The email list is inside the same box, so it grows with content */
     .email-list {
-      /* We do NOT fix the height here, so it grows naturally */
-      padding: 10px; /* a bit of spacing around email items */
-      background: #000; /* keep black background if you prefer */
-      box-sizing: border-box;
+      text-align: left;
     }
 
-    /* Each email item */
     .email-item {
-      background: #222;  /* slightly lighter black or #fafafa if you want white */
-      color: #fff;       /* text color if background is dark */
+      background: #fff;       /* or #f0f0f0, if you want a subtle difference */
+      color: #000;
       padding: 10px;
       border-radius: 5px;
       margin-bottom: 10px;
-      border: 1px solid #333;
+      border: 1px solid #ddd;
       word-wrap: break-word;
     }
 
-    /* Shake animation for the envelope icon */
+    /* Shake animation for envelope icon */
     @keyframes shake {
       0% { transform: translate(0, 0); }
-      25% { transform: translate(4px, 0); }
+      25% { transform: translate(2px, 0); }
       50% { transform: translate(0, 0); }
-      75% { transform: translate(-4px, 0); }
+      75% { transform: translate(-2px, 0); }
       100% { transform: translate(0, 0); }
     }
     .shake {
-      animation: shake 5.0s ease-in-out;
+      animation: shake 0.5s ease-in-out;
     }
-
   </style>
 
   <script>
@@ -189,7 +184,7 @@
       if (data.messages.length === 0) {
         emailList.innerHTML = "No new emails, wait for it...";
       } else {
-        // Display each incoming message
+        // Show each incoming message
         data.messages.forEach(email => {
           let emailItem = document.createElement("div");
           emailItem.classList.add("email-item");
@@ -201,7 +196,7 @@
           emailList.appendChild(emailItem);
         });
 
-        // Trigger the shake animation on the envelope icon
+        // Shake the envelope icon to indicate new mail
         const inboxIcon = document.getElementById("inbox-icon");
         inboxIcon.classList.remove("shake");
         void inboxIcon.offsetWidth;  // force reflow
@@ -265,7 +260,7 @@
 <body>
   <div class="gradient-bg">
 
-    <!-- 1) MAIN BIG WHITE BOX (existing) -->
+    <!-- 1) TOP MAIN CONTAINER -->
     <div class="container">
       <h1>Temporary Email Generator</h1>
       <amp-ad
@@ -280,7 +275,7 @@
         <div overflow=""></div>
       </amp-ad>
 
-      <!-- Black email box with the generated address -->
+      <!-- Black box for the email address -->
       <div class="email-box">
         <span>Your Temporary Email:</span>
         <span id="email-display">Loading...</span>
@@ -289,11 +284,11 @@
 
       <p>
         <strong>Why Use This Service?</strong><br>
-        Sometimes you need an email address to sign up for a website or other info, but 
-        you don’t want to expose your personal inbox to spam or unwanted emails. Our 
-        temporary email service gives you a disposable address you can use for account 
-        verifications and registrations, keeping your real email private and secure. 
-        Best of all, it's completely free. Enjoy a spam‑free, anonymous email experience!
+        Sometimes you need an email address to sign up for a website or other info, 
+        but you don’t want to expose your personal inbox to spam or unwanted emails. 
+        Our temporary email service gives you a disposable address you can use for 
+        account verifications and registrations, keeping your real email private 
+        and secure. Best of all, it's completely free.
       </p>
 
       <p class="timer">
@@ -302,11 +297,11 @@
 
       <button onclick="resetTimer()">Reset Timer</button>
     </div>
-    <!-- end main container -->
+    <!-- end .container -->
 
-    <!-- 2) NEW BOX OUTSIDE THE MAIN CONTAINER -->
+    <!-- 2) LOWER BOX (same width, fully rounded, white or light-gray background) -->
     <div class="inbox-container">
-      <!-- 30px-tall top row with label and envelope icon -->
+      <!-- 30px tall row for the label and icon -->
       <div class="inbox-header">
         <span class="inbox-label">INBOX:</span>
         <span id="inbox-icon" style="margin-left: 10px;">
@@ -314,7 +309,7 @@
         </span>
       </div>
 
-      <!-- Emails will appear here, causing the box to grow -->
+      <!-- The list of emails (expands as they arrive) -->
       <div class="email-list" id="email-list">
         Loading emails...
       </div>
