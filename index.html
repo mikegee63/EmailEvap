@@ -1,176 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="Keywords" content="temporary email, disposable email, anonymous email, free temporary email, temporary email address, throwaway email, disposable inbox, email privacy, spam protection, secure email">
-  <meta name="Description" content="EmailVanish.com is a free, secure temporary email service designed to protect your privacy online. Get your disposable email instantly and read our expert tips on email security.">
-  <title>EmailVanish - Free Temporary Email Service</title>
-  
-  <!-- AdSense script -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
+  <meta name="Keywords" content="temporary email, disposable email, anonymous email, free temporary email, temporary email address, throwaway email, disposable inbox, email privacy, spam protection, secure email, email alias, temporary inbox, email verification, anonymous disposable email, privacy protection email, quick email, free disposable email, secure disposable email, temporary email service, email generator">
+  <meta name="Description" content="EmailVanish.com is a free, secure temporary email service designed to protect your privacy online. Our platform generates anonymous, disposable email addresses instantly, allowing you to sign up for websites, verify accounts, and receive communications without exposing your personal email. Avoid spam, safeguard your identity, and enjoy hassle‑free online registrations with EmailVanish.com.">
   <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
-  
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  
-  <!-- Custom CSS -->
+  <title>Temporary Email Viewer</title>
+
+  <!-- Font Awesome for the envelope icon -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  >
+
   <style>
-    /* Global resets and typography */
+    /* Page resets and font */
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      background: #f1f1f1;
-      color: #333;
-      line-height: 1.6;
+      text-align: center;
     }
-    a {
-      color: #007bff;
-      text-decoration: none;
+    /* Make paragraphs in .content-container have nice line spacing */
+    .content-container p {
+      line-height: 1.5;
     }
-    a:hover {
-      text-decoration: underline;
-    }
-    header, nav, main, footer {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 10px;
-    }
-    /* Header and Navigation */
-    header {
-      background: #fff;
-      border-bottom: 2px solid #cc0000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-    }
-    nav ul li {
-      margin-left: 15px;
-    }
-    /* Container styling */
-    .container {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin: 20px 10px;
+
+    /* Gradient background for the entire page */
+    .gradient-bg {
+      background: linear-gradient(to bottom, #e9e9e9 11%, #333333 73%);
+      min-height: 100vh;
+      box-sizing: border-box;
       padding: 20px;
     }
-    /* Email generator box */
+
+    /* The original top container (white box) */
+    .container {
+      max-width: 90%;
+      width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* The existing black email box */
     .email-box {
-      background: #000;
+      font-size: 18px;
+      font-weight: bold;
       color: #fff;
+      background: #000;
       padding: 10px;
       border: 4px solid #cc0000;
       border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
       margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
       word-break: break-all;
     }
+
     .copy-icon {
-      width: 48px;
-      height: 48px;
+      width: 64px;
+      height: 64px;
       cursor: pointer;
     }
+
+    /* NEW: Half-width black box with red border for large green timer */
     .timer-box {
+      /* On desktop, up to 300px wide. On mobile, it shrinks to fit. */
       width: 300px;
+      max-width: 90%;  /* prevents overflow on small screens */
+      margin: 10px auto; /* center horizontally, add some vertical spacing */
       background: #000;
       border: 4px solid #cc0000;
       border-radius: 10px;
-      margin: 10px auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 60px;
+      height: 60px; /* Adjust as needed */
+      box-sizing: border-box;
     }
+
+    /* The big digital timer text */
     #big-timer {
-      font-family: monospace;
-      font-size: 36px;
-      color: #00ff00;
+      color: #00ff00;    /* bright green (terminal-like) */
+      font-size: 36px;   /* large text */
+      font-family: monospace; /* "digital" style; use a custom font for more authenticity */
       font-weight: bold;
+      line-height: 1;    /* keep text snug */
     }
-    button {
+
+    /* Center the reset button, make it red, white text, rounded corners */
+    #resetBtn {
       background-color: #cc0000;
       color: #fff;
       padding: 10px 20px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px;
+      font-size: 16px;
+      display: block;      /* so margin:0 auto can center it */
+      margin: 10px auto;   /* center horizontally, add spacing */
     }
-    button:hover {
-      background-color: #990000;
+    #resetBtn:hover {
+      background-color: #990000; /* darker red on hover */
     }
-    /* Inbox and Content sections */
-    .inbox-container, .content-container {
+
+    /* Box style (light gray, red border, rounded corners) */
+    .inbox-container,
+    .content-container {
+      max-width: 90%;
+      width: 600px;
+      margin: 10px auto;
+      padding: 20px;
       background: #f9f9f9;
       border: 4px solid #cc0000;
       border-radius: 10px;
-      margin: 20px 10px;
-      padding: 20px;
+      color: #000;
+      box-sizing: border-box;
+      text-align: left; /* so text in articles can be left-aligned */
     }
+
+    /* The 30px-high header row for the inbox box */
     .inbox-header {
+      height: 30px;
       display: flex;
       align-items: center;
-      margin-bottom: 10px;
       font-weight: bold;
-    }
-    .email-list .email-item {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 10px;
+      padding: 0 10px;
+      box-sizing: border-box;
       margin-bottom: 10px;
     }
-    /* Footer */
-    footer {
-      text-align: center;
-      font-size: 14px;
-      color: #777;
-      border-top: 1px solid #ddd;
-      padding: 10px 0;
-      margin-top: 20px;
+
+    /* Email list inside the inbox container */
+    .email-list {
+      text-align: left;
     }
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-      }
-      nav ul {
-        flex-direction: column;
-      }
-      .email-box {
-        flex-direction: column;
-        text-align: center;
-      }
-      .copy-icon {
-        margin-top: 10px;
-      }
+    .email-item {
+      background: #fff;
+      color: #000;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      word-wrap: break-word;
+    }
+
+    /* Example violent shake animation */
+    @keyframes violentShake {
+      0%   { transform: rotate(0deg) translate(0, 0); }
+      10%  { transform: rotate(5deg) translate(7px, -7px); }
+      20%  { transform: rotate(-5deg) translate(-7px, 7px); }
+      30%  { transform: rotate(5deg) translate(7px, -7px); }
+      40%  { transform: rotate(-5deg) translate(-7px, 7px); }
+      50%  { transform: rotate(5deg) translate(7px, -7px); }
+      60%  { transform: rotate(-5deg) translate(-7px, 7px); }
+      70%  { transform: rotate(5deg) translate(7px, -7px); }
+      80%  { transform: rotate(-5deg) translate(-7px, 7px); }
+      90%  { transform: rotate(5deg) translate(7px, -7px); }
+      100% { transform: rotate(0deg) translate(0, 0); }
+    }
+    .shake {
+      animation: violentShake 15s ease-in-out;
     }
   </style>
-  
-  <!-- Functional Scripts -->
+
   <script>
     let userEmail = "";
     const userId = localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9);
     localStorage.setItem("userId", userId);
+
     let timer;
     let timeLeft = 600; // 10 minutes
     let fetchInterval;
-    
+
     async function generateEmail() {
       const response = await fetch(`/generate-email?userId=${userId}`);
       const data = await response.json();
@@ -179,34 +187,38 @@
       resetTimer();
       startFetchingEmails();
     }
-    
+
     async function fetchEmails() {
       if (!userEmail || timeLeft <= 0) return;
       const response = await fetch(`/get-emails?email=${userEmail}`);
       const data = await response.json();
-      const emailList = document.getElementById("email-list");
-      emailList.innerHTML = "";
+
+      let emailList = document.getElementById("email-list");
+      emailList.innerHTML = ""; // Clear existing content
+
       if (data.messages.length === 0) {
         emailList.innerHTML = "No new emails, wait for it...";
       } else {
+        // Show each incoming message
         data.messages.forEach(email => {
           let emailItem = document.createElement("div");
           emailItem.classList.add("email-item");
           emailItem.innerHTML = `
-            <strong>From:</strong> ${email.sender}<br>
-            <strong>Subject:</strong> ${email.subject}<br>
-            <strong>Message:</strong> ${email.body}<br>
-            <hr>
+            <strong>From:</strong> ${email.sender} <br>
+            <strong>Subject:</strong> ${email.subject} <br>
+            <strong>Message:</strong> ${email.body} <br><hr>
           `;
           emailList.appendChild(emailItem);
         });
+
+        // Shake the envelope icon to indicate new mail
         const inboxIcon = document.getElementById("inbox-icon");
         inboxIcon.classList.remove("shake");
-        void inboxIcon.offsetWidth;
+        void inboxIcon.offsetWidth;  // force reflow
         inboxIcon.classList.add("shake");
       }
     }
-    
+
     function startFetchingEmails() {
       if (fetchInterval) clearInterval(fetchInterval);
       fetchInterval = setInterval(() => {
@@ -217,13 +229,15 @@
         }
       }, 15000);
     }
-    
+
     function copyEmailToClipboard() {
-      navigator.clipboard.writeText(userEmail)
-        .then(() => { alert("Email copied to clipboard!"); })
-        .catch(err => { console.error("Failed to copy email: ", err); });
+      navigator.clipboard.writeText(userEmail).then(() => {
+        alert("Email copied to clipboard!");
+      }).catch(err => {
+        console.error("Failed to copy email: ", err);
+      });
     }
-    
+
     function resetTimer() {
       clearInterval(timer);
       timeLeft = 600;
@@ -238,45 +252,39 @@
         }
       }, 1000);
     }
-    
+
+    // We update the big green timer (#big-timer).
     function updateTimerDisplay() {
       const minutes = Math.floor(timeLeft / 60);
       const seconds = (timeLeft % 60).toString().padStart(2, '0');
       const displayText = `${minutes}:${seconds}`;
+
+      // Show it in the big timer
       const bigTimer = document.getElementById("big-timer");
       if (bigTimer) {
         bigTimer.textContent = displayText;
       }
     }
-    
+
     window.onload = async () => {
       await generateEmail();
       resetTimer();
     };
   </script>
   
-  <!-- Favicon links -->
+  <!-- Standard favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- PNG fallback -->
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <!-- Apple Touch Icon -->
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
 <body>
-  <!-- Header with Navigation (Blog and Contact removed) -->
-  <header>
-    <h1>EmailVanish</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="privacy-policy.html">Privacy Policy</a></li>
-      </ul>
-    </nav>
-  </header>
-  
-  <main>
-    <!-- Primary Service Section -->
+  <div class="gradient-bg">
+
+    <!-- 1) TOP MAIN CONTAINER -->
     <div class="container">
-      <h2>Get Your Free Temporary Email Address</h2>
+      <h1>Temporary Email Generator</h1>
       <amp-ad
         width="100vw"
         height="320"
@@ -288,49 +296,144 @@
       >
         <div overflow=""></div>
       </amp-ad>
-      
+
+      <!-- Black box for the email address -->
       <div class="email-box">
         <span>Your Temporary Email:</span>
         <span id="email-display">Loading...</span>
-        <img src="copy2.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy Email">
+        <img src="copy2.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy">
       </div>
-      
+         
+      <p style="text-align:center; line-height:1.5;">
+        <strong>Messages Appear Below</strong><br>
+        <strong>Why Use This Service?</strong><br>
+        Sometimes you need an email address to sign up for a website or other info, 
+        but you don’t want to expose your personal inbox to spam or unwanted emails. 
+        Our temporary email service gives you a disposable address you can use for 
+        account verifications and registrations, keeping your real email private 
+        and secure. Best of all, it's completely free.
+      </p>
+
+      <!-- NEW HALF-WIDTH BOX FOR BIG GREEN TIMER -->
       <div class="timer-box">
         <span id="big-timer">10:00</span>
       </div>
-      
-      <button onclick="resetTimer()">Reset Timer</button>
-      <p>
-        Use your temporary email to sign up for websites and protect your personal inbox from spam.
-      </p>
+
+      <!-- Centered Reset Timer button -->
+      <button id="resetBtn" onclick="resetTimer()">Reset Timer</button>
     </div>
-    
-    <!-- Inbox Section -->
+    <!-- end .container -->
+
+    <!-- 2) INBOX BOX (same style) -->
     <div class="inbox-container">
+      <!-- 30px tall row for the label and icon -->
       <div class="inbox-header">
-        <span>INBOX:</span>
+        <span class="inbox-label">INBOX:</span>
         <span id="inbox-icon" style="margin-left: 10px;">
           <i class="fas fa-envelope fa-2x"></i>
         </span>
       </div>
+
+      <!-- The list of emails (expands as they arrive) -->
       <div class="email-list" id="email-list">
         Loading emails...
       </div>
     </div>
-    
-    <!-- Additional Informative Content Section -->
+
+    <!-- 3) FIRST ARTICLE: Protecting Your Inbox -->
     <div class="content-container">
-      <h2>Why Use a Temporary Email?</h2>
+      <h2>Protecting Your Inbox: Understanding the Risks and Rewards of Email Usage</h2>
+      <!-- Insert your image right below the heading -->
+      <img 
+        src="tubed-email2.png" 
+        alt="An illustration depicting email usage" 
+        style="max-width:100%; height:auto; margin-bottom:10px;"
+      >
+
       <p>
-        Disposable email addresses help protect your personal inbox from spam, phishing, and unwanted marketing. They offer a quick, secure way to verify accounts without exposing your real email.
+        Email has become an indispensable tool for both personal and professional communication. However, 
+        careless or uninformed use of email can gradually lead to an overwhelming buildup of spam, 
+        malicious links, and potential security threats. Spam emails often serve as gateways for 
+        phishing attacks, malware distribution, and other forms of cybercrime. 
+        According to the <a href="https://www.ftc.gov/" target="_blank">Federal Trade Commission (FTC)</a>, 
+        scammers frequently use deceptive emails to trick users into revealing sensitive information 
+        such as passwords, financial data, or social security numbers.
+      </p>
+
+      <p>
+        Moreover, the sheer volume of unwanted messages can clutter your inbox, making it easy to miss 
+        legitimate and important communications. <a href="https://spamhaus.org/" target="_blank">Spamhaus</a> 
+        reports that spam constitutes a significant percentage of global email traffic, underscoring 
+        how easily an inbox can become a breeding ground for fraudulent schemes if not carefully managed. 
+        In many cases, simply clicking an unknown link or opening a suspicious attachment can compromise 
+        your entire device or network.
+      </p>
+
+      <p>
+        One effective way to reduce these risks is by using temporary email services. A temporary email 
+        address lets you receive messages for a short duration—often 10 minutes—before the address and 
+        its contents are automatically deleted. This approach provides a buffer between your personal 
+        inbox and potential spam or malware attempts. By leveraging a disposable email, you can sign up 
+        for new websites, download e-books, or verify online accounts without exposing your primary email 
+        address. The <a href="https://www.cisa.gov/" target="_blank">Cybersecurity and Infrastructure 
+        Security Agency (CISA)</a> emphasizes the importance of maintaining good email hygiene, and 
+        disposable addresses can be a vital part of that strategy.
+      </p>
+
+      <p>
+        From a technical standpoint, temporary email services work by creating a unique, random address 
+        on the fly. When an incoming message arrives, it is stored on the server for only 10 minutes. 
+        During this period, you can access and read your emails or even reset the timer if you need 
+        more time. Once the countdown hits zero, both the address and any messages within it are 
+        permanently removed from the server. This ensures that no long-term data is stored and 
+        dramatically reduces the likelihood of spammers obtaining your real information.
+      </p>
+
+      <p>
+        While disposable email addresses are not a universal solution to all security concerns, 
+        they can be an invaluable tool in situations where you need a quick, throwaway inbox—especially 
+        if you’re unsure about the trustworthiness of a website. By isolating your personal address 
+        from potential spam traps, you can keep your primary inbox cleaner, safer, and more manageable.
+      </p>
+
+      <p>
+        Ultimately, responsible email practices are key to protecting your digital life. Combining 
+        strong passwords, multi-factor authentication, and disposable email addresses can help keep 
+        your inbox free of clutter and reduce your exposure to threats. By staying informed and 
+        employing the right tools, you’ll minimize spam, enhance your privacy, and enjoy a more 
+        secure online experience.
       </p>
     </div>
-  </main>
-  
-  <footer>
-    <p>
-      &copy; 2025 EmailVanish.com | <a href="about.html">About</a> | <a href="privacy-policy.html">Privacy Policy</a>
-    </p>
-  </footer>
+
+    <!-- 4) SECOND ARTICLE: 2,000-Word Technical Explanation -->
+    <div class="content-container">
+      <h2>Technical Details of How Email Works</h2>
+      <p>
+        <!-- ~2,000 words article (slightly shortened here for illustration) -->
+        <strong>Understanding the Technical Foundations of Email</strong><br><br>
+        Email is one of the oldest and most ubiquitous forms of digital communication, serving as a 
+        backbone for personal, corporate, and marketing correspondence worldwide... 
+        <!-- Insert the entire 2,000-word text from your earlier article below -->
+      </p>
+
+      <p>
+        <!-- Continue the rest of your 2,000-word article here. 
+             For brevity, we’re not repeating it all in this snippet, 
+             but you’d copy-paste the entire content from the 
+             “2,000-word article on how email works” here. -->
+      </p>
+
+      <!-- ... Keep going until you include the full article content ... -->
+
+    </div>
+
+    <footer id="page-footer" style="margin-top: 20px; text-align:center;">
+      <p>
+        <a href="about.html">About</a> |
+        <a href="privacy-policy.html">Privacy Policy</a> |
+        <a href="https://emailvanish.com">Home</a>
+      </p>
+    </footer>
+  </div>
 </body>
 </html>
