@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us</title>
+  <style>
+    /* Basic styling for the form */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #f9f9f9;
+      border: 2px solid #ccc;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #cc0000;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #990000;
+    }
+    .success, .error {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Contact Us</h1>
+
+  <!-- Display success or error messages if needed -->
+  <!-- For example, if you redirect back here with ?status=success -->
+  <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
+    <div class="success">Your message was sent successfully!</div>
+  <?php elseif (isset($_GET['status']) && $_GET['status'] === 'error'): ?>
+    <div class="error">Oops! Something went wrong. Please try again.</div>
+  <?php endif; ?>
+
+  <form action="sendMail.php" method="POST">
+    <label for="name">Your Name:</label>
+    <input type="text" name="name" id="name" required>
+
+    <label for="email">Your Email:</label>
+    <input type="email" name="email" id="email" required>
+
+    <label for="subject">Subject:</label>
+    <input type="text" name="subject" id="subject" required>
+
+    <label for="message">Message:</label>
+    <textarea name="message" id="message" rows="5" required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+
+</body>
+</html>
