@@ -432,7 +432,7 @@
   <h2>Understanding the Technical Foundations of Email</h2>
   <!-- Insert your image right below the heading -->
   <img 
-    src="tubed-email2.png" 
+    src="mail-vac.png" 
     alt="An illustration depicting email usage" 
     style="max-width:100%; height:auto; margin-bottom:10px;"
   >
@@ -452,9 +452,9 @@ From a technical standpoint, email relies on client-server architecture and mult
 Mail User Agents (MUAs): These are email clients, such as Microsoft Outlook, Mozilla Thunderbird, Apple Mail, or web-based clients like Gmail’s web interface. MUAs allow end users to write, send, receive, and organize emails.
 Mail Transfer Agents (MTAs): These are mail servers responsible for sending and routing emails across the Internet. Examples include Postfix, Exim, and Microsoft Exchange. When you click “send” in your email client, the MUA hands off the message to an MTA, which looks up DNS records and routes the message to the recipient’s mail server.
 Mail Delivery Agents (MDAs): Sometimes the same software as the MTA, sometimes separate, the MDA accepts inbound mail from an MTA and places it into the appropriate mailbox on the server for the recipient. In smaller setups, MTA and MDA tasks can be performed by the same software.
-Two sets of protocols govern how email is transferred and retrieved:
+Two sets of protocols govern how email is transferred and retrieved:</p>
 
-Simple Mail Transfer Protocol (SMTP): Used for sending and routing emails from one server to another.
+<p>Simple Mail Transfer Protocol (SMTP): Used for sending and routing emails from one server to another.
 Post Office Protocol (POP3) and Internet Message Access Protocol (IMAP): Used for retrieving email from a server to a client.
 In essence, when a user sends an email, the message is passed from the MUA to an outgoing mail server (an MTA) via SMTP. That MTA looks up the recipient’s mail server using DNS, and if everything is valid, transfers the email to the destination server’s MTA, also using SMTP. Finally, the recipient’s mail server delivers the message to the recipient’s mailbox, where it can be accessed via POP3, IMAP, or a proprietary protocol.
 
@@ -465,9 +465,9 @@ Connect to the outgoing mail server (MTA) via SMTP.
 Issue a series of commands (HELO/EHLO, MAIL FROM, RCPT TO, DATA, etc.) to describe who is sending the message and who the intended recipient(s) are.
 Transmit the actual message data, including headers (From, To, Subject) and the body.
 Conclude the session with a final command (e.g., QUIT).
-The MTA then repeats a similar process if it needs to forward the email to another server closer to the recipient. During this process, DNS queries are performed to find the MX (Mail eXchanger) records for the recipient’s domain. These records indicate which mail server(s) accept mail for that domain. Once the final destination MTA is reached, the message is handed off to the local MDA or a mailbox system, and it becomes available for retrieval by the recipient.
+The MTA then repeats a similar process if it needs to forward the email to another server closer to the recipient. During this process, DNS queries are performed to find the MX (Mail eXchanger) records for the recipient’s domain. These records indicate which mail server(s) accept mail for that domain. Once the final destination MTA is reached, the message is handed off to the local MDA or a mailbox system, and it becomes available for retrieval by the recipient.</p>
 
-4. POP3 vs. IMAP for Email Retrieval
+<p>4. POP3 vs. IMAP for Email Retrieval
 While SMTP handles outbound messages, POP3 and IMAP handle inbound message retrieval. Both protocols connect a user’s MUA (client) to the mailbox on a mail server:
 
 POP3 (Post Office Protocol version 3):
@@ -480,9 +480,9 @@ IMAP (Internet Message Access Protocol):
 Typically operates on port 143 (unencrypted) or port 993 (IMAPS with SSL/TLS).
 Maintains messages on the server and allows multiple folders and states (read, unread, flagged) to be synchronized across multiple devices.
 Supports more advanced features like server-side searching, folder subscriptions, and concurrent access from multiple clients.
-For most modern usage, IMAP is preferred due to its superior synchronization features. However, POP3 still remains in use, particularly for legacy systems or minimalistic setups.
+For most modern usage, IMAP is preferred due to its superior synchronization features. However, POP3 still remains in use, particularly for legacy systems or minimalistic setups.</p>
 
-5. Domain Name System (DNS) and MX Records
+<p>5. Domain Name System (DNS) and MX Records
 To route an email to the correct server, the sending MTA must know where the recipient’s mailbox is hosted. This is where DNS comes into play. Every domain (e.g., example.com) can have multiple MX records, each specifying a mail server hostname and priority. For instance:
 
 yaml
@@ -499,9 +499,9 @@ To solve these limitations, MIME (Multipurpose Internet Mail Extensions) was int
 Allows different content types (text/plain, text/html, image/jpeg, application/pdf, etc.).
 Provides encoding schemes like Base64 or Quoted-Printable for binary data.
 Permits multipart messages, so an email can contain both a plain text and HTML version, attachments, or embedded images.
-When you attach a file, your MUA encodes it in a suitable format (often Base64) and includes it as part of a multipart MIME message. When the recipient’s MUA retrieves it, it decodes and displays or stores the attachment accordingly.
+When you attach a file, your MUA encodes it in a suitable format (often Base64) and includes it as part of a multipart MIME message. When the recipient’s MUA retrieves it, it decodes and displays or stores the attachment accordingly.</p>
 
-7. Security and Encryption
+<p>7. Security and Encryption
 By default, SMTP was historically a plain-text protocol, meaning messages could be intercepted and read while in transit. Over time, security enhancements have been added:
 
 TLS (Transport Layer Security): Often referred to as “STARTTLS” for SMTP, this method upgrades a plain-text connection to an encrypted one on ports 25, 587, or 465. Similarly, POP3 and IMAP have their own TLS versions (ports 995 and 993, respectively). Encryption helps protect messages from eavesdroppers but does not guarantee end-to-end security if the receiving server or intermediate relay is compromised.
@@ -536,9 +536,9 @@ Companies like Google (Gmail), Microsoft (Outlook/Office 365), and Yahoo operate
 Despite their scale, these providers still adhere to the core email protocols—SMTP, IMAP, POP3—ensuring interoperability with other mail systems worldwide. However, they may add additional vendor-specific layers or APIs for advanced features and user management.
 
 11. Email Clients and Protocol Extensions
-Most email clients, whether desktop or mobile, implement standard protocols but can add convenience features:
+Most email clients, whether desktop or mobile, implement standard protocols but can add convenience features:</p>
 
-Push Notifications: While IMAP idle allows near-instant notification, some providers (like Gmail) offer proprietary push protocols for mobile clients.
+<p>Push Notifications: While IMAP idle allows near-instant notification, some providers (like Gmail) offer proprietary push protocols for mobile clients.
 OAuth Authentication: Instead of storing passwords in the client, OAuth tokens can be used, especially with large providers, improving security.
 Extensions: SMTP, IMAP, and POP3 have optional extensions (e.g., ESMTP, IDLE, UIDPLUS) that enhance functionality. Clients negotiate these with servers during the handshake.
 The result is that, while the fundamentals remain stable, incremental improvements keep email evolving and able to meet modern needs.
@@ -553,9 +553,9 @@ Monitoring performance: Keeping an eye on CPU, RAM, disk usage, and network thro
 Tools like mailq, postqueue, or server logs (/var/log/maillog on many Linux systems) are indispensable for diagnosing email flow problems. Combined with DNS checks, administrators can quickly spot issues like expired SSL certificates, DNS record mismatches, or mail server misconfigurations.
 
 13. Future Directions
-Despite email’s longevity, it continues to evolve. Some possible future developments include:
+Despite email’s longevity, it continues to evolve. Some possible future developments include:</p>
 
-Widespread Adoption of Encryption: While TLS is common, fully end-to-end encrypted email remains niche. If user-friendly encryption becomes standard, it could drastically improve privacy.
+<p>Widespread Adoption of Encryption: While TLS is common, fully end-to-end encrypted email remains niche. If user-friendly encryption becomes standard, it could drastically improve privacy.
 Stronger Anti-Spam Measures: Enhanced machine learning, widespread adoption of DMARC, and improved reputation systems may further reduce spam.
 Interoperability with Other Platforms: Email might integrate with messaging services or collaboration platforms. Some tools already unify email and chat under a single interface.
 Protocol Extensions: Proposed standards like SMTPUTF8 allow for internationalized email addresses. More robust features might come to IMAP, or new protocols could supplement or replace existing ones.
@@ -566,7 +566,7 @@ Email may appear simple at first glance—type a message, click send—but benea
 
 This longevity and interoperability make email a unique cornerstone of the Internet. It connects billions of users, fosters global communication, and supports everything from personal conversations to automated notifications and large-scale marketing campaigns. While newer communication methods continue to emerge, email’s open nature and extensive ecosystem of tools, servers, and protocols ensure that it remains both relevant and vital.
 
-By understanding how email works at a technical level, administrators can better troubleshoot delivery issues, secure their servers against spam and phishing, and adopt best practices like TLS encryption, SPF, DKIM, and DMARC. End users, meanwhile, can appreciate the complexity behind every message they send or receive—and why email, despite its occasional flaws, endures as one of the most essential services on the Internet.
+By understanding how email works at a technical level, administrators can better troubleshoot delivery issues, secure their servers against spam and phishing, and adopt best practices like TLS encryption, SPF, DKIM, and DMARC. End users, meanwhile, can appreciate the complexity behind every message they send or receive—and why email, despite its occasional flaws, endures as one of the most essential services on the Internet.</p>
   </p>
 </div>
       </p>
