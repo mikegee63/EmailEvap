@@ -1,136 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Contact Us</title>
-  <style>
-    /* Basic styling for the form */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    form {
-      max-width: 600px;
-      margin: 0 auto;
-      background: #f9f9f9;
-      border: 2px solid #ccc;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
-    }
-    input[type="text"],
-    input[type="email"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background: #cc0000;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #990000;
-    }
-    .success, .error {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 10px;
-      border-radius: 5px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .success {
-      background-color: #d4edda;
-      color: #155724;
-    }
-    .error {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-  </style>
-  <!-- Load reCAPTCHA API -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
+    <form id="contact-form" action="https://formspree.io/f/MrBedGZG" method="POST" onsubmit="return validateRecaptcha(event);">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
 
-  <h1>Contact Us</h1>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-  <!-- Single form with reCAPTCHA and Formspree -->
-  <form id="my-form" action="https://formspree.io/f/mrbedgzg" method="POST">
-    <label>Email:</label>
-    <input type="email" name="email" required />
-    
-    <label>Message:</label>
-    <input type="text" name="message" required />
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
 
-    <!-- Google reCAPTCHA -->
-    <div class="g-recaptcha" data-sitekey="6LfTsN4qAAAAAL5ahUWs945SdmvUaLnMA_oyNuj2"></div>
-    
-    <input type="hidden" name="g-recaptcha-response" id="recaptcha-response">
-    
-    <button id="my-form-button" type="submit">Submit</button>
-    <p id="my-form-status"></p>
-  </form>
+        <!-- Google reCAPTCHA -->
+        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>
+        <input type="hidden" name="g-recaptcha-response" id="recaptcha-response">
+        
+        <button type="submit">Send</button>
+        <p id="my-form-status"></p>
+    </form>
 
-  <script>
-    var form = document.getElementById("my-form");
+    <script>
+    function validateRecaptcha(event) {
+        event.preventDefault(); // Prevent form submission until verified
+        var recaptchaResponse = grecaptcha.getResponse();
+        var status = document.getElementById("my-form-status");
 
-    async function handleSubmit(event) {
-      event.preventDefault();
-      var status = document.getElementById("my-form-status");
-      var recaptchaResponse = grecaptcha.getResponse();
-
-      if (!recaptchaResponse) {
-        status.innerHTML = "Please complete the reCAPTCHA before submitting.";
-        return; // Stop form submission
-      }
-
-      var data = new FormData(event.target);
-      data.append("g-recaptcha-response", recaptchaResponse);
-
-      fetch(event.target.action, {
-        method: form.method,
-        body: data,
-        headers: {
-            'Accept': 'application/json'
+        if (!recaptchaResponse) {
+            status.innerHTML = "Please complete the reCAPTCHA before submitting.";
+            return false; // Stop form submission
         }
-      }).then(response => {
-        if (response.ok) {
-          status.innerHTML = "Thanks for your submission!";
-          form.reset();
-          grecaptcha.reset(); // Reset reCAPTCHA
-        } else {
-          response.json().then(data => {
-            if (Object.hasOwn(data, 'errors')) {
-              status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
-            } else {
-              status.innerHTML = "Oops! There was a problem submitting your form."
+
+        // Set reCAPTCHA response in the hidden input
+        document.getElementById("recaptcha-response").value = recaptchaResponse;
+
+        // Submit form using Fetch API
+        var form = document.getElementById("contact-form");
+        var data = new FormData(form);
+
+        fetch(form.action, {
+            method: "POST",
+            body: data,
+            headers: {
+                'Accept': 'application/json'
             }
-          })
-        }
-      }).catch(error => {
-        status.innerHTML = "Oops! There was a problem submitting your form.";
-      });
+        }).then(response => {
+            if (response.ok) {
+                status.innerHTML = "Thanks for your submission!";
+                form.reset();
+                grecaptcha.reset(); // Reset reCAPTCHA
+            } else {
+                response.json().then(data => {
+                    if (data.errors) {
+                        status.innerHTML = data.errors.map(error => error.message).join(", ");
+                    } else {
+                        status.innerHTML = "Oops! There was a problem submitting your form.";
+                    }
+                });
+            }
+        }).catch(error => {
+            status.innerHTML = "Oops! There was a problem submitting your form.";
+        });
+
+        return false; // Prevent default form submission
     }
-
-    form.addEventListener("submit", handleSubmit);
-  </script>
-
+    </script>
 </body>
 </html>
