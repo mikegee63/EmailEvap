@@ -99,12 +99,10 @@
             return false; // Stop form submission
         }
 
-        // Set reCAPTCHA response in the hidden input
-        document.getElementById("recaptcha-response").value = recaptchaResponse;
-
-        // Submit form using Fetch API
+        // Append reCAPTCHA response manually
         var form = document.getElementById("my-form");
         var data = new FormData(form);
+        data.append("g-recaptcha-response", recaptchaResponse);
 
         fetch(form.action, {
             method: "POST",
