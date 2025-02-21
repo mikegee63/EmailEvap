@@ -9,7 +9,363 @@
   <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
   <title>Temporary Email Viewer</title>
 
-  <!-- Font Awesome for the envelope icon -->
+  <!-- Font Awesome for the envelope icon --><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Keywords" content="temporary email, disposable email, anonymous email, free temporary email, temporary email address, throwaway email, disposable inbox, email privacy, spam protection, secure email">
+  <meta name="Description" content="EmailVanish.com is a free, secure temporary email service designed to protect your privacy online. Get your disposable email instantly and read our expert tips on email security.">
+  <title>EmailVanish - Free Temporary Email Service</title>
+  
+  <!-- AdSense script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
+  <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <style>
+    /* Global resets and typography */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: #f1f1f1;
+      color: #333;
+      line-height: 1.6;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    header, nav, main, footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+    /* Header and Navigation */
+    header {
+      background: #fff;
+      border-bottom: 2px solid #cc0000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    nav ul li {
+      margin-left: 15px;
+    }
+    /* Container styling */
+    .container {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin: 20px 10px;
+      padding: 20px;
+    }
+    /* Email generator box */
+    .email-box {
+      background: #000;
+      color: #fff;
+      padding: 10px;
+      border: 4px solid #cc0000;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      word-break: break-all;
+    }
+    .copy-icon {
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+    }
+    .timer-box {
+      width: 300px;
+      background: #000;
+      border: 4px solid #cc0000;
+      border-radius: 10px;
+      margin: 10px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 60px;
+    }
+    #big-timer {
+      font-family: monospace;
+      font-size: 36px;
+      color: #00ff00;
+      font-weight: bold;
+    }
+    button {
+      background-color: #cc0000;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #990000;
+    }
+    /* Inbox and Content sections */
+    .inbox-container, .content-container, .blog-container {
+      background: #f9f9f9;
+      border: 4px solid #cc0000;
+      border-radius: 10px;
+      margin: 20px 10px;
+      padding: 20px;
+    }
+    .inbox-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .email-list .email-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+      border-top: 1px solid #ddd;
+      padding: 10px 0;
+      margin-top: 20px;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+      }
+      nav ul {
+        flex-direction: column;
+      }
+      .email-box {
+        flex-direction: column;
+        text-align: center;
+      }
+      .copy-icon {
+        margin-top: 10px;
+      }
+    }
+  </style>
+  
+  <!-- Functional Scripts -->
+  <script>
+    let userEmail = "";
+    const userId = localStorage.getItem("userId") || Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("userId", userId);
+    let timer;
+    let timeLeft = 600; // 10 minutes
+    let fetchInterval;
+    
+    async function generateEmail() {
+      const response = await fetch(`/generate-email?userId=${userId}`);
+      const data = await response.json();
+      userEmail = data.email;
+      document.getElementById("email-display").innerText = userEmail;
+      resetTimer();
+      startFetchingEmails();
+    }
+    
+    async function fetchEmails() {
+      if (!userEmail || timeLeft <= 0) return;
+      const response = await fetch(`/get-emails?email=${userEmail}`);
+      const data = await response.json();
+      const emailList = document.getElementById("email-list");
+      emailList.innerHTML = "";
+      if (data.messages.length === 0) {
+        emailList.innerHTML = "No new emails, wait for it...";
+      } else {
+        data.messages.forEach(email => {
+          let emailItem = document.createElement("div");
+          emailItem.classList.add("email-item");
+          emailItem.innerHTML = `
+            <strong>From:</strong> ${email.sender}<br>
+            <strong>Subject:</strong> ${email.subject}<br>
+            <strong>Message:</strong> ${email.body}<br>
+            <hr>
+          `;
+          emailList.appendChild(emailItem);
+        });
+        const inboxIcon = document.getElementById("inbox-icon");
+        inboxIcon.classList.remove("shake");
+        void inboxIcon.offsetWidth;
+        inboxIcon.classList.add("shake");
+      }
+    }
+    
+    function startFetchingEmails() {
+      if (fetchInterval) clearInterval(fetchInterval);
+      fetchInterval = setInterval(() => {
+        if (timeLeft > 0) {
+          fetchEmails();
+        } else {
+          clearInterval(fetchInterval);
+        }
+      }, 15000);
+    }
+    
+    function copyEmailToClipboard() {
+      navigator.clipboard.writeText(userEmail)
+        .then(() => { alert("Email copied to clipboard!"); })
+        .catch(err => { console.error("Failed to copy email: ", err); });
+    }
+    
+    function resetTimer() {
+      clearInterval(timer);
+      timeLeft = 600;
+      updateTimerDisplay();
+      startFetchingEmails();
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          clearInterval(fetchInterval);
+        }
+      }, 1000);
+    }
+    
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = (timeLeft % 60).toString().padStart(2, '0');
+      const displayText = `${minutes}:${seconds}`;
+      const bigTimer = document.getElementById("big-timer");
+      if (bigTimer) {
+        bigTimer.textContent = displayText;
+      }
+    }
+    
+    window.onload = async () => {
+      await generateEmail();
+      resetTimer();
+    };
+  </script>
+  
+  <!-- Favicon links -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+</head>
+<body>
+  <!-- Header with Navigation -->
+  <header>
+    <h1>EmailVanish</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <!-- Primary Service Section -->
+    <div class="container">
+      <h2>Get Your Free Temporary Email Address</h2>
+      <amp-ad
+        width="100vw"
+        height="320"
+        type="adsense"
+        data-ad-client="ca-pub-1604406379780489"
+        data-ad-slot="2006841536"
+        data-auto-format="rspv"
+        data-full-width=""
+      >
+        <div overflow=""></div>
+      </amp-ad>
+      
+      <div class="email-box">
+        <span>Your Temporary Email:</span>
+        <span id="email-display">Loading...</span>
+        <img src="copy2.jpg" class="copy-icon" onclick="copyEmailToClipboard()" alt="Copy Email">
+      </div>
+      
+      <div class="timer-box">
+        <span id="big-timer">10:00</span>
+      </div>
+      
+      <button onclick="resetTimer()">Reset Timer</button>
+      <p>
+        Use your temporary email to sign up for websites and protect your personal inbox from spam.
+      </p>
+    </div>
+    
+    <!-- Inbox Section -->
+    <div class="inbox-container">
+      <div class="inbox-header">
+        <span>INBOX:</span>
+        <span id="inbox-icon" style="margin-left: 10px;"><i class="fas fa-envelope fa-2x"></i></span>
+      </div>
+      <div class="email-list" id="email-list">
+        Loading emails...
+      </div>
+    </div>
+    
+    <!-- Additional Informative Content Section -->
+    <div class="content-container">
+      <h2>Why Use a Temporary Email?</h2>
+      <p>
+        Disposable email addresses help protect your personal inbox from spam, phishing, and unwanted marketing. They offer a quick, secure way to verify accounts without exposing your real email.
+      </p>
+    </div>
+    
+    <!-- Blog/Editorial Section to Add Unique Value -->
+    <div class="blog-container container">
+      <h2>Latest Articles & Tips</h2>
+      <article>
+        <h3>Protecting Your Inbox: Top Security Tips</h3>
+        <p>
+          Learn expert strategies to safeguard your email against spam and phishing attacks.
+        </p>
+        <a href="blog1.html">Read More &raquo;</a>
+      </article>
+      <article>
+        <h3>Understanding Disposable Email Services</h3>
+        <p>
+          Dive into the technology behind temporary email addresses and why they are vital for online privacy.
+        </p>
+        <a href="blog2.html">Read More &raquo;</a>
+      </article>
+      <!-- Additional articles can be added here -->
+    </div>
+  </main>
+  
+  <footer>
+    <p>
+      &copy; 2025 EmailVanish.com | <a href="about.html">About</a> | <a href="privacy-policy.html">Privacy Policy</a> | <a href="contact.html">Contact</a>
+    </p>
+  </footer>
+</body>
+</html>
+
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
