@@ -72,73 +72,47 @@
   <h1>Contact Us</h1>
 
   <!-- Single form with reCAPTCHA and Formspree -->
-  <form id="my-form" action="https://formspree.io/f/mrbedgzg" method="POST" onsubmit="return validateRecaptcha(event);">
-    <label>Email:</label>
-    <input type="email" name="email" required />
-    
-    <label>Message:</label>
-    <input type="text" name="message" required />
-
-    <!-- Google reCAPTCHA -->
-    <div class="g-recaptcha" data-sitekey="6LfTsN4qAAAAAL5ahUWs945SdmvUaLnMA_oyNuj2"></div>
-    
-    <input type="hidden" name="g-recaptcha-response" id="recaptcha-response">
-    
-    <button id="my-form-button" type="submit">Submit</button>
-    <p id="my-form-status"></p>
-  </form>
+  <!-- modify this form HTML and place wherever you want your form -->
+<form id="my-form" action="https://formspree.io/f/mrbedgzg" method="POST">
+  <label>Email:</label>
+  <input type="email" name="email" />
+  <label>Message:</label>
+  <input type="text" name="message" />
+  <button id="my-form-button">Submit</button>
+  <p id="my-form-status"></p>
+</form>
 
   <script>
-    function validateRecaptcha(event) {
-    event.preventDefault(); // Prevent form submission until verified
-    var recaptchaResponse = grecaptcha.getResponse();
+  var form = document.getElementById("my-form");
+  
+  async function handleSubmit(event) {
+    event.preventDefault();
     var status = document.getElementById("my-form-status");
-
-    if (!recaptchaResponse) {
-        status.innerHTML = "Please complete the reCAPTCHA before submitting.";
-        return false; // Stop form submission
-    }
-
-    // Set reCAPTCHA response in the hidden input field
-    document.getElementById("recaptcha-response").value = recaptchaResponse;
-
-    // Submit form using Fetch API
-    var form = document.getElementById("my-form");
-    var data = new FormData(form);
-
-    fetch(form.action, {
-        method: "POST",
-        body: data,
-        headers: {
-            'Accept': 'application/json'
-        }
+    var data = new FormData(event.target);
+    fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: {
+          'Accept': 'application/json'
+      }
     }).then(response => {
-        if (response.ok) {
-            status.innerHTML = "Thanks for your submission!";
-            form.reset();
-            grecaptcha.reset(); // Reset reCAPTCHA
-        } else {
-            response.json().then(data => {
-                if (data.errors) {
-                    status.innerHTML = data.errors.map(error => error.message).join(", ");
-                } else {
-                    status.innerHTML = "Oops! There was a problem submitting your form.";
-                }
-            });
-        }
+      if (response.ok) {
+        status.innerHTML = "Thanks for your submission!";
+        form.reset()
+      } else {
+        response.json().then(data => {
+          if (Object.hasOwn(data, 'errors')) {
+            status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
+          } else {
+            status.innerHTML = "Oops! There was a problem submitting your form"
+          }
+        })
+      }
     }).catch(error => {
-        status.innerHTML = "Oops! There was a problem submitting your form.";
+      status.innerHTML = "Oops! There was a problem submitting your form"
     });
-
-    return false; // Prevent default form submission
-}
-
-// Attach event listener properly
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("my-form").addEventListener("submit", validateRecaptcha);
-});
-
-  </script>
-
+  }
+  form.addEventListener("submit", handleSubmit)
+</script>
 </body>
 </html>
