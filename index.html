@@ -18,11 +18,14 @@
   <style>
     /* Page resets and font */
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
+  display: flex;      /* Enable flex layout */
+  flex-direction: column;
+  min-height: 100vh;  /* Ensure it spans the full viewport height */
+}
+
+main {
+  flex: 1;            /* Grow to fill leftover space, pushing footer down */
+}
     /* Make paragraphs in .content-container have nice line spacing */
     .content-container p {
       line-height: 1.5;
