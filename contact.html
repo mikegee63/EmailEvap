@@ -4,15 +4,31 @@
   <meta charset="UTF-8">
   <title>Contact Us</title>
   <style>
-    /* Basic styling for the form */
-    body {
-      font-family: Arial, sans-serif;
+    /* Make body and html fill the full height to enable sticky footer */
+    html, body {
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      height: 100%;
     }
+
+    /* Use flex layout on body to push footer to bottom if content is short */
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+    }
+
+    /* A container (main) for your page content (the form, headings, etc.) */
+    main {
+      flex: 1;               /* This expands to fill remaining space */
+      padding: 20px;         /* Some padding around your content */
+    }
+
     h1 {
       text-align: center;
     }
+
+    /* Basic styling for the form */
     form {
       max-width: 600px;
       margin: 0 auto;
@@ -49,11 +65,10 @@
     }
     .success, .error {
       max-width: 600px;
-      margin: 0 auto;
+      margin: 0 auto 10px auto;
       padding: 10px;
       border-radius: 5px;
       text-align: center;
-      margin-bottom: 10px;
     }
     .success {
       background-color: #d4edda;
@@ -63,81 +78,75 @@
       background-color: #f8d7da;
       color: #721c24;
     }
+
+    /* Sticky footer at the bottom */
+    footer {
+      background: #4B3B2B; /* dark grey/brown */
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+    }
   </style>
   <!-- Load reCAPTCHA API -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
-  <h1>Contact Us</h1>
+  <!-- Page Content -->
+  <main>
+    <h1>Contact Us</h1>
 
-  <!-- Single form with reCAPTCHA and Formspree -->
-  <!-- modify this form HTML and place wherever you want your form -->
-<!-- modify this form HTML and place wherever you want your form -->
-<form
-  action="https://formspree.io/f/mrbedgzg"
-  method="POST"
->
-  <label>
-    Your email:
-    <input type="email" name="email">
-  </label>
-  <label>
-    Your message:
-    <textarea name="message"></textarea>
-  </label>
-  <!-- your other form fields go here -->
-  <button type="submit">Send</button>
-</form>
+    <!-- Example success/error messages (optional) -->
+    <!--
+    <div class="success">Your message was sent successfully!</div>
+    <div class="error">Oops! Something went wrong. Please try again.</div>
+    -->
 
-</script>
-  <footer id="page-footer" style="margin-top: 20px;">
-      <p>
-       
-      </p>
-    </footer>
-  </div>
-</body>
-</html>
+    <!-- Your form with reCAPTCHA and Formspree -->
+    <form
+      action="https://formspree.io/f/mrbedgzg"
+      method="POST"
+    >
+      <label>
+        Your email:
+        <input type="email" name="email" required>
+      </label>
+      <label>
+        Your message:
+        <textarea name="message" rows="5" required></textarea>
+      </label>
+      <!-- Add other form fields here if needed -->
 
+      <button type="submit">Send</button>
+    </form>
+  </main>
+
+  <!-- Sticky Footer -->
+  <footer id="page-footer">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 900px; margin: 0 auto;">
+      
+      <!-- Left Column (optional) -->
+      <div style="flex: 1; text-align: left; padding: 0 10px;">
+        <!-- Put any text or links here if desired -->
+      </div>
+      
+      <!-- Center Column -->
+      <div style="flex: 1; text-align: center; padding: 0 10px;">
+        <p>
+          <a href="about.html" style="color: #fff;">About</a> |
+          <a href="privacy-policy.html" style="color: #fff;">Privacy Policy</a> |
+          <a href="https://emailvanish.com" style="color: #fff;">Home</a>
+        </p>
+      </div>
+      
+      <!-- Right Column -->
+      <div style="flex: 1; text-align: right; padding: 0 10px;">
+        <p>
+          <a href="contact.html" style="color: #fff;">Contact</a>
+        </p>
+      </div>
     </div>
+  </footer>
 
-    <footer id="page-footer" style="margin-top: 20px;">
-  <!-- Flex container to hold three columns -->
-  <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-    
-    <!-- Left Column -->
-    <div style="flex: 1; text-align: left; padding: 0 10px;">
-      <p>
-        
-      </p>
-    </div>
-    
-    <!-- Center Column -->
-    <div style="flex: 1; text-align: center; padding: 0 10px;">
-      <p>
-        <a href="about.html">About</a> |
-        <a href="privacy-policy.html">Privacy Policy</a> |
-        <a href="https://emailvanish.com">Home</a>
-      </p>
-    </div>
-    
-    <!-- Right Column (placeholder for additional text or links) -->
-    <div style="flex: 1; text-align: right; padding: 0 10px;">
-      <p>
-        <!-- Add your own text/links here -->
-        <strong></strong><br>
-        <a href="#"><a href="http://emailvanish.com/contact.html">Contact</a>
-</a><br>
-       
-</a>
-      </p>
-    </div>
-  </div>
-</footer>
-
-  </div>
-</body>
-</html>
 </body>
 </html>
