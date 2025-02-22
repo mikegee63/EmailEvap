@@ -150,24 +150,6 @@
       border: 1px solid #ddd;
       word-wrap: break-word;
     }
-/* Simple 3-column layout using flexbox */
-.resource-columns {
-  display: flex;
-  justify-content: space-between;
-  max-width: 900px; /* Adjust as needed */
-  margin: 20px auto;
-}
-.resource-column {
-  flex: 1;
-  margin: 0 10px;
-}
-.resource-column ul {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-.resource-column li {
-  margin-bottom: 10px;
-}
 
     /* Example violent shake animation */
     @keyframes violentShake {
@@ -367,39 +349,8 @@
     </div>
 <!-- 3) NEW CONTENT BOX (inserted between inbox and first article) -->
 <div class="content-container">
-  <h2></h2>
-  <p><!-- 2) INBOX BOX (same style) -->
-<div class="inbox-container">
-  <!-- 30px tall row for the label and icon -->
-  <div class="inbox-header">
-    <span class="inbox-label">INBOX:</span>
-    <span id="inbox-icon" style="margin-left: 10px;">
-      <i class="fas fa-envelope fa-2x"></i>
-    </span>
-  </div>
-
-  <!-- The list of emails (expands as they arrive) -->
-  <div class="email-list" id="email-list">
-    Loading emails...
-  </div>
-</div>
-
-<!-- 3) NEW CONTENT BOX: Email Safety & Security Resources -->
-<div class="content-container">
-  
-
-<!-- 4) FIRST ARTICLE: Protecting Your Inbox -->
-<div class="content-container">
-  <h2>Protecting Your Inbox: Understanding the Risks and Rewards of Email Usage</h2>
-  <!-- Insert your image right below the heading -->
-  <img 
-    src="tubed-email2.png" 
-    alt="An illustration depicting email usage" 
-    style="max-width:100%; height:auto; margin-bottom:10px;"
-  >
-  <!-- rest of your article here -->
-</div>
-
+  <h2>Additional Information or Ads</h2>
+  <p>
     This is a new content box placed between the inbox container and 
     the first article. You can add text, images, or even ads here.
   </p>
@@ -411,7 +362,8 @@
       <img 
         src="tubed-email2.png" 
         alt="An illustration depicting email usage" 
-        style="max-width:100%; height:auto; margin-bottom:10px;">
+        style="max-width:100%; height:auto; margin-bottom:10px;"
+      >
 
       <p>
         Email has become an indispensable tool for both personal and professional communication. However, 
