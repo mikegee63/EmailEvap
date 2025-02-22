@@ -125,6 +125,24 @@
       box-sizing: border-box;
       text-align: left; /* so text in articles can be left-aligned */
     }
+     /* Simple 3-column layout using flexbox */
+   .resource-columns {
+     display: flex;
+     justify-content: space-between;
+     max-width: 900px; /* Adjust as needed */
+     margin: 20px auto;
+   }
+   .resource-column {
+     flex: 1;
+     margin: 0 10px;
+   }
+   .resource-column ul {
+     list-style-type: disc;
+     padding-left: 20px;
+   }
+   .resource-column li {
+     margin-bottom: 10px;
+    }
 
     /* The 30px-high header row for the inbox box */
     .inbox-header {
@@ -351,7 +369,6 @@
 <div class="content-container">
   <h2>Learning Resources</h2>
   <p>
-    <div class="resource-columns">
     <!-- Column 1 -->
     <div class="resource-column">
       <ul>
