@@ -406,7 +406,7 @@ main {
       </div>
     </div>
  <div class="content-container">
-  <scriptfetch('https://ieeetv.ieee.org/rss')  // Replace with your RSS feed URL
+  <script>fetch('https://ieeetv.ieee.org/rss')  // Replace with your RSS feed URL
   .then(response => response.text())
   .then(str => new DOMParser().parseFromString(str, 'text/xml'))
   .then(data => {
