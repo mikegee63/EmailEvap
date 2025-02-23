@@ -17,6 +17,15 @@
 
   <style>
     /* Page resets and font */
+header {
+  background: #343a44; /* Same as footer */
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+  position: relative; /* Ensures it stays above content */
+  width: 100%;
+  z-index: 1000; /* Makes sure it stays on top */
+}
 
 body {
   background: linear-gradient(to bottom, #e9e9e9 27%, #333333 73%);
@@ -306,6 +315,36 @@ main {
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 </head>
 <body>
+<header id="page-header">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 900px; margin: 0 auto;">
+    
+    <!-- Left Column (optional) -->
+    <div style="flex: 1; text-align: left; padding: 0 10px;">
+      <img 
+        src="At-sign-TRANS.png" 
+        alt="Transparent at-sign graphic" 
+        width="100" 
+        height="100"
+      />
+    </div>
+    
+    <!-- Center Column -->
+    <div style="flex: 1; text-align: center; padding: 0 10px;">
+      <p>
+        <a href="about.html" style="color: #fff;">About</a> |
+        <a href="privacy-policy.html" style="color: #fff;">Privacy Policy</a> |
+        <a href="https://emailvanish.com" style="color: #fff;">Home</a>
+      </p>
+    </div>
+    
+    <!-- Right Column -->
+    <div style="flex: 1; text-align: right; padding: 0 10px;">
+      <p>
+        <a href="contact.html" style="color: #fff;">Contact</a>
+      </p>
+    </div>
+  </div>
+</header>
 
     <!-- 1) TOP MAIN CONTAINER -->
     <div class="container">
