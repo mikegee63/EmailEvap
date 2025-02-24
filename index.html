@@ -408,7 +408,7 @@ main {
  <div class="content-container">
   <div id="feed"></div>
   <script>
-    fetch('https://ieeetv.ieee.org/rss')
+    fetch('http://rss.cnn.com/rss/edition_us.rss')
       .then(response => response.text())
       .then(str => new DOMParser().parseFromString(str, 'text/xml'))
       .then(data => {
