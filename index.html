@@ -405,32 +405,8 @@ main {
         Loading emails...
       </div>
     </div>
- <div class="content-container">
-  <div id="feed"></div>
-  <script>
-    fetch('https://rss.app/feeds/lEGAOwYiXwnxGY4d.xml')
-      .then(response => response.text())
-      .then(str => new DOMParser().parseFromString(str, 'text/xml'))
-      .then(data => {
-        const items = data.querySelectorAll('item');
-        const container = document.getElementById('feed');
-        items.forEach(item => {
-          const title = item.querySelector('title').textContent;
-          const link = item.querySelector('link').textContent;
-          const description = item.querySelector('description').textContent;
-          const div = document.createElement('div');
-          div.innerHTML = `<h3><a href="${link}">${title}</a></h3><p>${description}</p>`;
-          container.appendChild(div);
-        });
-      })
-      .catch(error => console.error('Error fetching RSS feed:', error));
-  </script>
-</div>
-
-</div>
   <!-- 3) NEW CONTENT BOX (inserted between inbox and first article) -->
- 
-    <div class="content-container">
+   <div class="content-container">
   <h2>Learning Resources</h2>
     <!-- Column 1 -->
     <div class="resource-column">
