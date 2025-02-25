@@ -16,29 +16,35 @@
   >
 
   <style>
-    /* Page resets and font */
-header {
-  background: #343a44; /* Same as footer */
-  color: #fff;
-  padding: 10px 0;
-  text-align: center;
-  position: relative; /* Ensures it stays above content */
-  width: 100%;
-  z-index: 1000; /* Makes sure it stays on top */
-}
-
-body {
-  background: linear-gradient(to bottom, #e9e9e9 5%, #333333 60%);
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  font-family: Ubuntu;
-}
+/* Define Ubuntu font using the local TTF file */
+    @font-face {
+      font-family: 'Ubuntu';
+      src: url('ubuntu.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
     
+    /* Page resets and font */
+    header {
+      background: #343a44; /* Same as footer */
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+      position: relative;
+      width: 100%;
+      z-index: 1000;
+    }
 
-
+    body {
+      background: linear-gradient(to bottom, #e9e9e9 5%, #333333 60%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      font-family: Ubuntu;
+    }
+    
 main {
   flex: 1;            /* Grow to fill leftover space, pushing footer down */
 }
