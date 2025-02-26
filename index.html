@@ -23,24 +23,28 @@
       font-weight: normal;
       font-style: normal;
     }
-.header-bar {
-  height: 20px;
-  width: 100%;
-  background: #fff;
-}
-    /* Page resets and font */
-header {
-  background: #343a44; /* Same as footer */
+    
+    header {
+  background: #343a44; /* header’s solid background */
   color: #fff;
   padding: 10px 0;
   text-align: center;
   position: relative;
   width: 100%;
   z-index: 1000;
-  border-bottom: 20px solid #fff; /* Add this line */
+  margin-bottom: 20px; /* add space for the white bar */
 }
 
-    }
+header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -20px;  /* position it 20px below the header */
+  width: 100%;
+  height: 20px;
+  background: #fff;
+  z-index: -1;   /* ensure it sits behind the header content */
+}
 
     body {
       background: linear-gradient(to bottom, #e9e9e9 5%, #333333 60%);
@@ -211,14 +215,13 @@ main {
       animation: violentShake 15s ease-in-out;
     }
 
-      /* Sticky footer at the bottom */
+     /* Sticky footer at the bottom */
     footer {
       background: #343a44; /* office grey/brown */
       color: #fff;
       padding: 10px 0;
       text-align: center;
     }
-
   </style>
 
   <script>
@@ -361,7 +364,7 @@ main {
     </div>
   </div>
 </header>
-<div class="header-bar"></div>
+
     <!-- 1) TOP MAIN CONTAINER -->
     <div class="container">
       <center><h1>Temporary Email Generator</h1></center>
