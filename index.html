@@ -24,26 +24,27 @@
       font-style: normal;
     }
     
-    header {
-  background: #343a44; /* header’s solid background */
+ header {
+  position: relative;
+  top: -15px; /* shifts the header (and its white bar) up by 15px */
+  background: #343a44;
   color: #fff;
   padding: 10px 0;
   text-align: center;
-  position: relative;
   width: 100%;
   z-index: 1000;
-  margin-bottom: 20px; /* add space for the white bar */
+  margin-bottom: 20px; /* space for the white bar */
 }
 
 header::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -20px;  /* position it 20px below the header */
+  bottom: -20px;  /* white bar stays 20px tall below header */
   width: 100%;
   height: 20px;
   background: #fff;
-  z-index: -1;   /* ensure it sits behind the header content */
+  z-index: -1;
 }
 
     body {
@@ -216,24 +217,24 @@ main {
     }
 
      /* Sticky footer at the bottom */
-    footer {
-  position: relative; /* required for pseudo-element positioning */
+ footer {
+  position: relative;
+  top: 15px; /* shifts the footer (and its white bar) down by 15px */
   background: #343a44;
   color: #fff;
   padding: 10px 0;
   text-align: center;
-  /* No need to change the body gradient – this only affects footer */
 }
 
 footer::before {
   content: "";
   position: absolute;
-  top: -20px;  /* positions the bar above the footer */
+  top: -20px;  /* white bar positioned above the footer */
   left: 0;
   width: 100%;
   height: 20px;
   background: #fff;
-  z-index: -1;  /* places it behind the footer content */
+  z-index: -1;
 }
   </style>
 
