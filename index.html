@@ -217,11 +217,24 @@ main {
 
      /* Sticky footer at the bottom */
     footer {
-      background: #343a44; /* office grey/brown */
-      color: #fff;
-      padding: 10px 0;
-      text-align: center;
-    }
+  position: relative; /* required for pseudo-element positioning */
+  background: #343a44;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+  /* No need to change the body gradient – this only affects footer */
+}
+
+footer::before {
+  content: "";
+  position: absolute;
+  top: -20px;  /* positions the bar above the footer */
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: #fff;
+  z-index: -1;  /* places it behind the footer content */
+}
   </style>
 
   <script>
