@@ -1,61 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <title>Contact Us</title>
   <style>
-    /* Make body and html fill the full height to enable sticky footer */
+    /* Ensure html and body fill the full height for a sticky footer */
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
     }
-header {
-  position: relative;
-  top: -7px; /* shifts the header (and its white bar) up by 15px */
-  background: #343a44;
-  color: #fff;
-  padding: 10px 0;
-  text-align: center;
-  width: 100%;
-  z-index: 1000;
-  margin-bottom: 20px; /* space for the white bar */
-}
-
-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -20px;  /* white bar stays 20px tall below header */
-  width: 100%;
-  height: 20px;
-  background: #fff;
-  z-index: -1;
-}
-    /* Use flex layout on body to push footer to bottom if content is short */
+    
+    /* Common styling for both header and footer */
+    .header-footer {
+      position: relative;
+      background: #343a44;
+      color: #fff;
+      padding: 10px 0;
+      text-align: center;
+      width: 100%;
+      z-index: 1000;
+    }
+    /* Add a 20px white bar trim above each element */
+    .header-footer::before {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      background: #fff;
+      z-index: -1;
+    }
+    
+    /* Use flex layout on body to push the footer to the bottom if content is short */
     body {
       background: linear-gradient(to bottom, #e9e9e9 5%, #333333 60%);
       min-height: 100vh;
-      margin: 0;
-      padding: 0;
       display: flex;
       flex-direction: column;
       font-family: Ubuntu;
     }
-
-    /* A container (main) for your page content (the form, headings, etc.) */
+    
+    /* Main content container */
     main {
-      flex: 1;               /* This expands to fill remaining space */
-      padding: 20px;         /* Some padding around your content */
+      flex: 1;
+      padding: 20px;
     }
-
+    
     h1 {
       text-align: center;
     }
-
-    /* Basic styling for the form */
+    
+    /* Form styling */
     form {
       max-width: 600px;
       margin: 0 auto;
@@ -64,11 +62,13 @@ header::after {
       padding: 20px;
       border-radius: 10px;
     }
+    
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: bold;
     }
+    
     input[type="text"],
     input[type="email"],
     textarea {
@@ -78,6 +78,7 @@ header::after {
       border: 1px solid #ccc;
       border-radius: 5px;
     }
+    
     button {
       background: #cc0000;
       color: #fff;
@@ -86,10 +87,13 @@ header::after {
       cursor: pointer;
       border-radius: 5px;
       font-size: 16px;
+      display: block;
+      margin: 0 auto;
     }
     button:hover {
       background: #990000;
     }
+    
     .success, .error {
       max-width: 600px;
       margin: 0 auto 10px auto;
@@ -105,48 +109,57 @@ header::after {
       background-color: #f8d7da;
       color: #721c24;
     }
-
-         /* Sticky footer at the bottom */
- footer {
-  position: relative;
-  top: 15px; /* shifts the footer (and its white bar) down by 15px */
-  background: #343a44;
-  color: #fff;
-  padding: 10px 0;
-  text-align: center;
-}
-
-footer::before {
-  content: "";
-  position: absolute;
-  top: -20px;  /* white bar positioned above the footer */
-  left: 0;
-  width: 100%;
-  height: 20px;
-  background: #fff;
-  z-index: -1;
-}
+    
+    /* Optional: Style inner columns for header/footer */
+    .header-footer > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
   </style>
   <!-- Load reCAPTCHA API -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-
+  <!-- Header (identical to footer) -->
+  <header class="header-footer">
+    <div>
+      <!-- Left Column (optional) -->
+      <div style="flex: 1; text-align: left;">
+        <!-- You may place a logo or additional text here -->
+      </div>
+      <!-- Center Column -->
+      <div style="flex: 1; text-align: center;">
+        <p>
+          <a href="about.html" style="color: #fff;">About</a> |
+          <a href="privacy-policy.html" style="color: #fff;">Privacy Policy</a> |
+          <a href="https://emailvanish.com" style="color: #fff;">Home</a>
+        </p>
+      </div>
+      <!-- Right Column -->
+      <div style="flex: 1; text-align: right;">
+        <p>
+          <a href="contact.html" style="color: #fff;">Contact</a>
+        </p>
+      </div>
+    </div>
+  </header>
+  
   <!-- Page Content -->
   <main>
     <h1>Contact Us</h1>
-
+    
     <!-- Example success/error messages (optional) -->
     <!--
     <div class="success">Your message was sent successfully!</div>
     <div class="error">Oops! Something went wrong. Please try again.</div>
     -->
-
-    <!-- Your form with reCAPTCHA and Formspree -->
-    <form
-      action="https://formspree.io/f/mrbedgzg"
-      method="POST"
-    >
+    
+    <!-- Contact form -->
+    <form action="https://formspree.io/f/mrbedgzg" method="POST">
       <label>
         Your email:
         <input type="email" name="email" required>
@@ -155,38 +168,33 @@ footer::before {
         Your message:
         <textarea name="message" rows="5" required></textarea>
       </label>
-      <!-- Add other form fields here if needed -->
-
+      <!-- Additional fields can be added here -->
       <button type="submit">Send</button>
     </form>
   </main>
-
-  <!-- Sticky Footer -->
-  <footer id="page-footer">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 900px; margin: 0 auto;">
-      
+  
+  <!-- Footer (identical to header) -->
+  <footer class="header-footer" id="page-footer">
+    <div>
       <!-- Left Column (optional) -->
-      <div style="flex: 1; text-align: left; padding: 0 10px;">
-        <!-- Put any text or links here if desired -->
+      <div style="flex: 1; text-align: left;">
+        <!-- Optional content -->
       </div>
-      
       <!-- Center Column -->
-      <div style="flex: 1; text-align: center; padding: 0 10px;">
+      <div style="flex: 1; text-align: center;">
         <p>
           <a href="about.html" style="color: #fff;">About</a> |
           <a href="privacy-policy.html" style="color: #fff;">Privacy Policy</a> |
           <a href="https://emailvanish.com" style="color: #fff;">Home</a>
         </p>
       </div>
-      
       <!-- Right Column -->
-      <div style="flex: 1; text-align: right; padding: 0 10px;">
+      <div style="flex: 1; text-align: right;">
         <p>
           <a href="contact.html" style="color: #fff;">Contact</a>
         </p>
       </div>
     </div>
   </footer>
-
 </body>
 </html>
