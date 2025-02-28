@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489"
-     crossorigin="anonymous"></script>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Privacy Policy</title>
-   <style>
-/* Define Ubuntu font using the local TTF file */
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Template</title>
+  
+  <!-- Font Awesome for icons (if needed) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  
+  <style>
+    /* Define Ubuntu font using a local TTF file */
     @font-face {
       font-family: 'Ubuntu';
       src: url('Ubuntu.ttf') format('truetype');
@@ -15,79 +17,116 @@
       font-style: normal;
     }
     
- header {
-  position: relative;
-  top: -8px; /* shifts the header (and its white bar) up by 15px */
-  background: #343a44;
-  color: #fff;
-  padding: 9px 0;
-  text-align: center;
-  width: 100%;
-  z-index: 1000;
-  margin-bottom: 20px; /* space for the white bar */
-}
-
-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -20px;  /* white bar stays 20px tall below header */
-  width: 100%;
-  height: 20px;
-  background: #fff;
-  z-index: -1;
-}
-
-    body {
-      background: linear-gradient(to top, #e9e9e9 1%, #333333 100%);
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      font-family: Ubuntu;
+    /* Global box-sizing for consistency */
+    * {
+      box-sizing: border-box;
     }
     
-main {
-  flex: 1;            /* Grow to fill leftover space, pushing footer down */
-}
-    /* Make paragraphs in .content-container have nice line spacing */
-.content-container p {
-  line-height: 1.5;
+    /* Basic body styling with a gradient background */
+    body {
+      background: linear-gradient(to bottom, #e9e9e9 1%, #333333 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: Ubuntu, sans-serif;
     }
-.container,
-.inbox-container,
-.content-container {
-  width: 650px;
-  margin: 0 auto;           /* centers the box consistently */
-  box-sizing: border-box;/* ensures padding and border are included in the 600px */
-  border: 4px solid #cc0000;
-}
-  /* Gradient background for the entire page */
-.gradient-bg {
-  background: linear-gradient(to bottom, #e9e9e9 1%, #333333 100%);
-  min-height: 100vh;
-  height: auto;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
- /* Sticky footer at the bottom */
+    
+    /* Header styling with a white bar trim at the bottom */
+    header {
+      position: relative;
+      background: #343a44;
+      color: #fff;
+      padding: 9px 0;
+      text-align: center;
+      width: 100%;
+      z-index: 1000;
+      margin-bottom: 20px;
+    }
+    header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -20px; /* 20px white bar below header */
+      width: 100%;
+      height: 20px;
+      background: #fff;
+      z-index: -1;
+    }
+    
+    /* Footer styling with a white bar trim at the top */
     footer {
-      background: #343a44; /* office grey/brown */
+      position: relative;
+      background: #343a44;
       color: #fff;
       padding: 10px 0;
       text-align: center;
-    }     
-</style>
+      margin-top: 20px;
+    }
+    footer::before {
+      content: "";
+      position: absolute;
+      top: -20px; /* 20px white bar above footer */
+      left: 0;
+      width: 100%;
+      height: 20px;
+      background: #fff;
+      z-index: -1;
+    }
+    
+    /* Inner container for header and footer content */
+    .header-footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+    .header-footer-inner a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+    
+    /* Blank content box for page content */
+    .content {
+      flex: 1;
+      width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+      border: 4px solid #cc0000;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
 <body>
-  <h1>Privacy Policy</h1>
+  <!-- Header -->
+  <header>
+    <div class="header-footer-inner">
+      <!-- Left Column: Logo/Image -->
+      <div style="flex: 1; text-align: left;">
+        <img src="At-sign-TRANS2.png" alt="Transparent at-sign graphic" width="256" height="100">
+      </div>
+      <!-- Center Column: Navigation Links -->
+      <div style="flex: 1; text-align: center;">
+        <a href="about.html">About</a> |
+        <a href="privacy-policy.html">Privacy Policy</a> |
+        <a href="https://emailvanish.com">Home</a>
+      </div>
+      <!-- Right Column: Contact Link -->
+      <div style="flex: 1; text-align: right;">
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Blank Content Box -->
+  <div class="content">
+    <!-- <h1>Privacy Policy</h1>
   <p><em>Last Updated: 2-15-2025</em></p>
   
   <p>Welcome to emailvanish.com ("we," "us," or "our"). This Privacy Policy explains how we collect, use, and disclose information from visitors to our website located at http://emailvanish.com (the "Site"). By using our Site, you agree to the practices described in this policy.</p>
@@ -121,40 +160,31 @@ main {
   <p>We may update our Privacy Policy from time to time. When we do, we will update the "Last Updated" date at the top of this page. We encourage you to review this policy periodically to stay informed about how we are protecting your information.</p>
   <p>
   
-  <a href="https://emailvanish.com">Home</a>
-</p>
-
- <body>
-<header id="page-header">
-  <div style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 900px; margin: 0 auto;">
-    
-    <!-- Left Column (optional) -->
-    <div style="flex: 1; text-align: left; padding: 0 10px;">
-      <img 
-        src="At-sign-TRANS.png" 
-        alt="Transparent at-sign graphic" 
-        width="200" 
-        height="100"
-      />
-    </div>
-    
-    <!-- Center Column -->
-    <div style="flex: 1; text-align: center; padding: 0 10px;">
-      <p>
-        <a href="about.html" style="color: #fff;">About</a> |
-        <a href="privacy-policy.html" style="color: #fff;">Privacy Policy</a> |
-        <a href="https://emailvanish.com" style="color: #fff;">Home</a>
-      </p>
-    </div>
-    
-    <!-- Right Column -->
-    <div style="flex: 1; text-align: right; padding: 0 10px;">
-      <p>
-        <a href="contact.html" style="color: #fff;">Contact</a>
-      </p>
-    </div>
+</p>Add your page-specific content here -->
   </div>
-</header>
+  
+  <!-- Footer -->
+  <footer id="page-footer">
+    <div class="header-footer-inner">
+      <!-- Left Column: Logo/Image -->
+      <div style="flex: 1; text-align: left;">
+        <img src="At-sign-TRANS2.png" alt="Transparent at-sign graphic" width="256" height="100">
+      </div>
+      <!-- Center Column: Navigation Links -->
+      <div style="flex: 1; text-align: center;">
+        <a href="about.html">About</a> |
+        <a href="privacy-policy.html">Privacy Policy</a> |
+        <a href="https://emailvanish.com">Home</a>
+      </div>
+      <!-- Right Column: Contact Link -->
+      <div style="flex: 1; text-align: right;">
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
+
 
    
 </body>
