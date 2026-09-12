@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="Description" content="EmailVanish Premium keeps your temporary email addresses alive for as long as you subscribe. Receive account verifications, security codes and password resets weeks or months later. $1.99 a month, cancel anytime.">
+<title>EmailVanish Premium - keep your temporary email</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<style>
+  @font-face { font-family: 'Ubuntu'; src: url('Ubuntu.ttf') format('truetype'); font-weight: normal; font-style: normal; }
+  header { position: relative; top: -8px; background: #343a44; color: #fff; padding: 9px 0; text-align: center; width: 100%; z-index: 1000; margin-bottom: 20px; }
+  header::after { content: ""; position: absolute; left: 0; bottom: -20px; width: 100%; height: 20px; background: #fff; z-index: -1; }
+  body { background: linear-gradient(to top, #e9e9e9 1%, #333333 100%); min-height: 100vh; margin: 0; padding: 0; display: flex; flex-direction: column; font-family: Ubuntu, sans-serif; }
+  main { flex: 1; padding: 0 16px; }
+  footer { position: relative; top: 15px; background: #343a44; color: #fff; padding: 10px 0; text-align: center; }
+  footer::before { content: ""; position: absolute; top: -20px; left: 0; width: 100%; height: 20px; background: #fff; z-index: -1; }
+  h1 { color: #fff; text-align: center; margin: 10px 0 20px; }
+  .box { max-width: 90%; width: 640px; margin: 10px auto; padding: 20px; background: #f9f9f9; border: 4px solid #cc0000; border-radius: 10px; color: #000; box-sizing: border-box; }
+  .box h2 { margin-top: 0; }
+  .price { font-size: 2.2em; font-weight: bold; text-align: center; margin: 6px 0; }
+  .price small { font-size: 0.45em; font-weight: normal; }
+  .btn { background: #cc0000; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-family: inherit; }
+  .btn:hover { background: #990000; }
+  .btn.secondary { background: #343a44; }
+  .btn.secondary:hover { background: #22262d; }
+  .btn.small { padding: 5px 10px; font-size: 13px; }
+  .btn:disabled { opacity: 0.6; cursor: default; }
+  .center { text-align: center; }
+  input[type=email] { padding: 9px; font-size: 15px; width: 100%; max-width: 320px; border: 1px solid #aaa; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center; }
+  .muted { color: #555; font-size: 0.9em; }
+  .notice { padding: 10px 12px; border-radius: 6px; margin: 10px 0; }
+  .notice.ok { background: #e3f6e3; border: 1px solid #7bc27b; }
+  .notice.warn { background: #fff3cd; border: 1px solid #e0b73a; }
+  .notice.bad { background: #fde2e2; border: 1px solid #d66; }
+  .keep-banner { background: #111; color: #0f0; font-family: monospace; font-size: 1.15em; padding: 10px; border-radius: 6px; text-align: center; word-break: break-all; }
+  ul.features { padding-left: 20px; line-height: 1.6; }
+  .addr-list { list-style: none; padding: 0; margin: 0; }
+  .addr-item { display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; background: #fff; margin-bottom: 6px; cursor: pointer; flex-wrap: wrap; }
+  .addr-item.active { border-color: #cc0000; box-shadow: 0 0 0 2px rgba(204,0,0,0.15); }
+  .addr-item .addr { font-family: monospace; font-size: 1.05em; flex: 1; min-width: 200px; word-break: break-all; }
+  .addr-item .label { color: #555; font-size: 0.85em; }
+  .badge { background: #cc0000; color: #fff; border-radius: 10px; padding: 1px 8px; font-size: 12px; }
+  .badge.zero { background: #999; }
+  .msg { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 10px; margin-bottom: 8px; word-wrap: break-word; }
+  .msg .head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; cursor: pointer; }
+  .msg .subj { font-weight: bold; }
+  .msg .from, .msg .when { color: #555; font-size: 0.85em; }
+  .msg .body { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid #eee; }
+  .msg.open .body { display: block; }
+  .msg .body table { max-width: 100%; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 0 12px; }
+  .icon-btn { background: none; border: none; color: #999; cursor: pointer; font-size: 14px; }
+  .icon-btn:hover { color: #cc0000; }
+  .hidden { display: none !important; }
+  .terms { font-size: 0.85em; color: #444; line-height: 1.5; }
+  @media (max-width: 480px) { .price { font-size: 1.8em; } }
+</style>
+</head>
+<body>
+<header id="page-header">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; max-width: 900px; margin: 0 auto;">
+    <div style="flex: 1; text-align: left;">
+      <a href="/"><img src="At-sign-TRANS2.png" alt="EmailVanish" width="256" height="100"></a>
+    </div>
+    <div style="flex: 1; text-align: center; padding: 0 10px;">
+      <p>
+        <a href="about.html" style="color: #fff;">About</a> |
+        <a href="privacy-policy.html" style="color: #fff;">Privacy</a> |
+        <a href="premium.html" style="color: #fff;">Premium</a> |
+        <a href="https://emailvanish.com" style="color: #fff;">Home</a>
+      </p>
+    </div>
+    <div style="flex: 1; text-align: right; padding: 0 10px;">
+      <p><a href="contact.html" style="color: #fff;">Contact</a> |
+        <a href="premium.html?signin=1" style="color: #fff;">Sign in</a></p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h1>EmailVanish Premium</h1>
+
+  <!-- ===== Landing / not signed in ===== -->
+  <section id="landing">
+    <div class="box" style="padding: 10px 20px;">
+      <div class="row" style="justify-content: space-between;">
+        <span><strong>Already a Premium member?</strong> <span class="muted">Sign in to see your kept addresses and mail.</span></span>
+        <a class="btn secondary small" href="#signin" onclick="focusSignin()">Sign in</a>
+      </div>
+    </div>
+
+    <div class="box">
+      <h2>Keep your temporary email. For as long as you want.</h2>
+      <p>The free inbox vanishes after 10 minutes. That is the point, until the site you signed up for
+        sends a security code three weeks later and there is nowhere for it to land.</p>
+      <p><strong>Premium keeps any EmailVanish address receiving for as long as you subscribe.</strong>
+        Verification codes, password resets, "confirm it's you" logins, order confirmations, all still there when you come back.</p>
+      <div id="keep-banner-wrap" class="hidden">
+        <p class="center"><strong>Address to keep:</strong></p>
+        <div class="keep-banner" id="keep-banner"></div>
+        <p class="muted center">Subscribe now and this address is yours. You can add more afterwards.</p>
+      </div>
+      <div class="price">$1.99 <small>/ month</small></div>
+      <ul class="features">
+        <li>Up to <strong>20 kept addresses</strong> on one subscription</li>
+        <li>Last <strong>500 messages</strong> stored per address</li>
+        <li>Claim the address you are using right now, or create new ones any time. Your sign-in stays the same no matter how many you keep</li>
+        <li>Delete any address or message the moment you are done with it</li>
+        <li>No tracking pixels: images and scripts are stripped from every message</li>
+        <li>Receive only. Premium addresses cannot send mail</li>
+        <li>Cancel any time from the billing page, no questions asked</li>
+      </ul>
+      <div class="center" style="margin: 16px 0 6px;">
+        <button class="btn" id="subscribeBtn" onclick="startCheckout()">Subscribe for $1.99 / month</button>
+      </div>
+      <p class="muted center">Secure payment by Stripe. At checkout Stripe asks for your <strong>regular email address</strong> (Gmail, Outlook, and so on). That is where your receipts and sign-in links go, so it must be one you can always read. <strong>Do not enter an EmailVanish address there.</strong> Your kept addresses are separate: add or remove as many as you like, your sign-in never changes.</p>
+      <div id="landing-msg"></div>
+    </div>
+
+    <div class="box" id="signin">
+      <h2>Already subscribed? Sign in</h2>
+      <p class="muted">No password. Enter the regular email you gave Stripe at checkout (not one of your kept EmailVanish addresses) and we will send you a one-time sign-in link.</p>
+      <form onsubmit="return sendLoginLink(event)">
+        <div class="row">
+          <input type="email" id="loginEmail" placeholder="you@example.com" required maxlength="200" autocomplete="email">
+          <button class="btn secondary" id="loginBtn" type="submit">Email me a sign-in link</button>
+        </div>
+      </form>
+      <div id="login-msg"></div>
+    </div>
+
+    <div class="box terms">
+      <strong>The small print.</strong> Premium is a monthly subscription billed by Stripe at $1.99 (USD) until you cancel.
+      Cancel at any time from the billing page; your addresses keep receiving until the end of the period you paid for.
+      Thirty days after a subscription ends, its addresses and stored messages are deleted permanently.
+      Addresses are receive-only. Each address keeps its most recent 500 messages; older ones are dropped automatically.
+      Anyone who knows one of your addresses can send mail to it, so do not use Premium for anything you would not want a stranger to be able to reach.
+      See the <a href="privacy-policy.html">privacy policy</a> for how stored mail is handled.
+    </div>
+  </section>
+
+  <!-- ===== Dashboard / signed in ===== -->
+  <section id="dashboard" class="hidden">
+    <div class="box">
+      <div class="toolbar">
+        <div><strong id="acct-email"></strong><br><span class="muted" id="acct-status"></span></div>
+        <div class="row">
+          <button class="btn secondary small" onclick="openPortal()">Manage billing</button>
+          <button class="btn secondary small" onclick="logout()">Sign out</button>
+        </div>
+      </div>
+      <div id="status-notice"></div>
+      <div class="toolbar">
+        <h2 style="margin:0;">Your addresses <span class="muted" id="addr-count"></span></h2>
+        <div class="row">
+          <button class="btn small" id="newAddrBtn" onclick="newAddress()">+ New address</button>
+        </div>
+      </div>
+      <div id="claim-wrap" class="hidden">
+        <div class="notice ok">Claim <span class="keep-banner" style="display:inline; padding:2px 6px;" id="claim-addr"></span>?
+          <button class="btn small" onclick="claimPending()">Yes, keep it</button>
+          <button class="btn secondary small" onclick="dismissClaim()">No</button>
+        </div>
+      </div>
+      <ul class="addr-list" id="addr-list"></ul>
+      <p class="muted hidden" id="addr-empty">No kept addresses yet. Click <strong>+ New address</strong>, or go to the <a href="/">home page</a>, copy the address you are using and press "Keep this address".</p>
+      <div id="dash-msg"></div>
+    </div>
+
+    <div class="box hidden" id="inbox-box">
+      <div class="toolbar">
+        <div>
+          <strong>Inbox</strong> <span class="keep-banner" style="display:inline; padding:2px 6px; font-size:1em;" id="inbox-addr"></span>
+          <button class="icon-btn" title="Copy address" onclick="copyAddr()"><i class="fas fa-copy"></i></button>
+        </div>
+        <div class="row">
+          <button class="btn secondary small" onclick="loadMessages(currentAddr)">Refresh</button>
+          <button class="btn secondary small" onclick="renameAddr()">Label</button>
+          <button class="btn small" id="delAddrBtn" onclick="deleteAddr()">Delete address</button>
+        </div>
+      </div>
+      <div id="msg-list"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026 EmailVanish.com. All rights reserved. <a href="privacy-policy.html" style="color:#fff;">Privacy Policy</a></p>
+</footer>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  let account = null, currentAddr = null, pollTimer = null, pendingKeep = (params.get('keep') || '').toLowerCase();
+  const ADDR_RE = /^[a-f0-9]{8}@emailvanish\.com$/;
+  if (!ADDR_RE.test(pendingKeep)) pendingKeep = '';
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function note(id, cls, text) { $(id).innerHTML = text ? `<div class="notice ${cls}">${esc(text)}</div>` : ''; }
+  async function api(method, url, body) {
+    const opts = { method, headers: {}, credentials: 'same-origin' };
+    if (body !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+    const r = await fetch(url, opts);
+    let data = {};
+    try { data = await r.json(); } catch (e) {}
+    if (!r.ok) throw new Error(data.error || `Request failed (${r.status})`);
+    return data;
+  }
+  function fmtDate(ms) { return ms ? new Date(ms).toLocaleString() : ''; }
+
+  // ---------- landing ----------
+  function focusSignin() {
+    setTimeout(() => { $('signin').scrollIntoView({ behavior: 'smooth', block: 'center' }); $('loginEmail').focus({ preventScroll: true }); }, 50);
+  }
+  async function startCheckout() {
+    const btn = $('subscribeBtn'); btn.disabled = true; note('landing-msg', 'ok', 'Opening secure checkout...');
+    try {
+      const { url } = await api('POST', '/premium/checkout', { keep: pendingKeep || undefined });
+      location.href = url;
+    } catch (e) { note('landing-msg', 'bad', e.message); btn.disabled = false; }
+  }
+  async function sendLoginLink(ev) {
+    ev.preventDefault();
+    const btn = $('loginBtn'); btn.disabled = true;
+    try {
+      const r = await api('POST', '/premium/login', { email: $('loginEmail').value.trim() });
+      note('login-msg', 'ok', r.message + ' Check your spam folder if it does not arrive within a minute.');
+    } catch (e) { note('login-msg', 'bad', e.message); }
+    btn.disabled = false;
+    return false;
+  }
+
+  // ---------- dashboard ----------
+  function showDashboard(acct) {
+    account = acct;
+    $('landing').classList.add('hidden'); $('dashboard').classList.remove('hidden');
+    $('acct-email').textContent = acct.email;
+    let status = '';
+    if (acct.status === 'active') status = acct.cancelAtPeriodEnd ? `Cancels on ${fmtDate(acct.currentPeriodEnd)}` : `Active${acct.currentPeriodEnd ? ', renews ' + fmtDate(acct.currentPeriodEnd) : ''}`;
+    else if (acct.status === 'past_due') status = 'Payment failed, please update your card';
+    else status = 'Subscription ended';
+    $('acct-status').textContent = status;
+    if (acct.emailIsEmailVanish) note('status-notice', 'warn', 'Your sign-in email is an EmailVanish address. Sign-in links are sent there, and you can only read it while signed in, so you could lock yourself out. Use "Manage billing" to change your email to a regular address you can always read.');
+    else if (acct.status === 'past_due') note('status-notice', 'warn', 'Your last payment failed. Mail is still being kept for now. Use "Manage billing" to update your card before storage stops.');
+    else if (!acct.storing) note('status-notice', 'bad', `Your subscription has ended, so new mail is no longer being kept. Everything here will be deleted in ${acct.purgeInDays} day(s). Resubscribe below to keep it.`);
+    else note('status-notice', '', '');
+    if (!acct.storing) $('status-notice').innerHTML += '<div class="center" style="margin:8px 0;"><button class="btn" onclick="startCheckout()">Resubscribe for $1.99 / month</button></div>';
+    $('newAddrBtn').disabled = !acct.storing || acct.addresses.length >= acct.limits.addresses;
+    $('addr-count').textContent = `(${acct.addresses.length} of ${acct.limits.addresses})`;
+    renderAddresses();
+    if (pendingKeep && acct.storing && !acct.addresses.some(a => a.address === pendingKeep)) {
+      $('claim-addr').textContent = pendingKeep; $('claim-wrap').classList.remove('hidden');
+    } else $('claim-wrap').classList.add('hidden');
+    if (currentAddr && !acct.addresses.some(a => a.address === currentAddr)) closeInbox();
+  }
+  function renderAddresses() {
+    const list = $('addr-list'); list.innerHTML = '';
+    $('addr-empty').classList.toggle('hidden', account.addresses.length > 0);
+    account.addresses.forEach(a => {
+      const li = document.createElement('li');
+      li.className = 'addr-item' + (a.address === currentAddr ? ' active' : '');
+      li.innerHTML = `<span class="addr">${esc(a.address)}</span>` +
+        (a.label ? `<span class="label">${esc(a.label)}</span>` : '') +
+        `<span class="badge ${a.unread ? '' : 'zero'}" title="unread / total">${a.unread} new / ${a.total}</span>`;
+      li.onclick = () => openInbox(a.address);
+      list.appendChild(li);
+    });
+  }
+  async function refresh() { try { showDashboard(await api('GET', '/premium/me')); } catch (e) { /* signed out */ } }
+  async function newAddress() {
+    $('newAddrBtn').disabled = true;
+    try { const r = await api('POST', '/premium/addresses', {}); showDashboard(r.account); openInbox(r.address); }
+    catch (e) { note('dash-msg', 'bad', e.message); $('newAddrBtn').disabled = false; }
+  }
+  async function claimPending() {
+    try { const r = await api('POST', '/premium/addresses', { keep: pendingKeep }); pendingKeep = ''; history.replaceState(null, '', '/premium.html'); showDashboard(r.account); openInbox(r.address); }
+    catch (e) { note('dash-msg', 'bad', e.message); }
+  }
+  function dismissClaim() { pendingKeep = ''; history.replaceState(null, '', '/premium.html'); $('claim-wrap').classList.add('hidden'); }
+
+  function openInbox(addr) {
+    currentAddr = addr; $('inbox-addr').textContent = addr; $('inbox-box').classList.remove('hidden');
+    $('delAddrBtn').textContent = 'Delete address'; $('delAddrBtn').dataset.armed = '';
+    renderAddresses(); loadMessages(addr);
+    clearInterval(pollTimer); pollTimer = setInterval(() => { if (document.visibilityState === 'visible') loadMessages(addr, true); }, 30000);
+    $('inbox-box').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function closeInbox() { currentAddr = null; clearInterval(pollTimer); $('inbox-box').classList.add('hidden'); renderAddresses(); }
+  async function loadMessages(addr, quiet) {
+    if (!addr) return;
+    try {
+      const { messages } = await api('GET', `/premium/addresses/${encodeURIComponent(addr)}/messages`);
+      const list = $('msg-list'); const openIds = new Set([...list.querySelectorAll('.msg.open')].map(m => m.dataset.id));
+      list.innerHTML = messages.length ? '' : '<p class="muted">Nothing here yet. Mail sent to this address will appear within a few seconds of arriving.</p>';
+      messages.forEach(m => {
+        const div = document.createElement('div'); div.className = 'msg' + (openIds.has(String(m.id)) ? ' open' : ''); div.dataset.id = m.id;
+        div.innerHTML = `<div class="head"><div><div class="subj">${esc(m.subject || '(no subject)')}</div><div class="from">${esc(m.sender)}</div></div>` +
+          `<div><span class="when">${esc(fmtDate(m.received_at))}</span> <button class="icon-btn" title="Delete message"><i class="fas fa-trash"></i></button></div></div>` +
+          `<div class="body">${m.body || ''}</div>`;  // body was sanitized server-side on arrival
+        div.querySelector('.head').onclick = ev => { if (!ev.target.closest('button')) div.classList.toggle('open'); };
+        div.querySelector('button').onclick = async ev => { ev.stopPropagation(); try { await api('DELETE', `/premium/messages/${m.id}`); div.remove(); } catch (e) { note('dash-msg', 'bad', e.message); } };
+        list.appendChild(div);
+      });
+      if (!quiet) refreshCountsOnly();
+    } catch (e) { if (!quiet) note('dash-msg', 'bad', e.message); }
+  }
+  async function refreshCountsOnly() { try { const a = await api('GET', '/premium/me'); account = a; $('addr-count').textContent = `(${a.addresses.length} of ${a.limits.addresses})`; renderAddresses(); } catch (e) {} }
+  function copyAddr() { navigator.clipboard.writeText(currentAddr).then(() => note('dash-msg', 'ok', 'Address copied.')); }
+  async function renameAddr() {
+    const cur = (account.addresses.find(a => a.address === currentAddr) || {}).label || '';
+    const label = prompt('Label for this address (for example: "Facebook", "Steam"):', cur);
+    if (label === null) return;
+    try { await api('PATCH', `/premium/addresses/${encodeURIComponent(currentAddr)}`, { label }); refresh(); } catch (e) { note('dash-msg', 'bad', e.message); }
+  }
+  async function deleteAddr() {
+    const btn = $('delAddrBtn');
+    if (!btn.dataset.armed) { btn.dataset.armed = '1'; btn.textContent = 'Really delete? Click again'; setTimeout(() => { btn.dataset.armed = ''; btn.textContent = 'Delete address'; }, 4000); return; }
+    try { const r = await api('DELETE', `/premium/addresses/${encodeURIComponent(currentAddr)}`); closeInbox(); showDashboard(r.account); }
+    catch (e) { note('dash-msg', 'bad', e.message); }
+  }
+  async function openPortal() { try { const { url } = await api('POST', '/premium/portal', {}); location.href = url; } catch (e) { note('dash-msg', 'bad', e.message); } }
+  async function logout() { try { await api('POST', '/premium/logout'); } catch (e) {} location.href = '/premium.html'; }
+
+  // ---------- boot ----------
+  (async () => {
+    if (pendingKeep) { $('keep-banner').textContent = pendingKeep; $('keep-banner-wrap').classList.remove('hidden'); }
+    if (params.get('signin') === '1' || location.hash === '#signin') focusSignin();
+    if (params.get('login') === 'expired') note('login-msg', 'warn', 'That sign-in link has expired or was already used. Request a new one below.');
+    const sid = params.get('session_id');
+    if (sid) {
+      note('landing-msg', 'ok', 'Confirming your payment...');
+      try { const acct = await api('GET', `/premium/session?session_id=${encodeURIComponent(sid)}`); history.replaceState(null, '', '/premium.html' + (pendingKeep ? '?keep=' + pendingKeep : '')); showDashboard(acct); return; }
+      catch (e) { note('landing-msg', 'bad', e.message + ' If you were charged, use the sign-in form below with the email you gave at checkout.'); }
+    }
+    try { showDashboard(await api('GET', '/premium/me')); } catch (e) { /* not signed in, stay on landing */ if (params.get('signin') === '1') focusSignin(); }
+  })();
+</script>
+</body>
+</html>

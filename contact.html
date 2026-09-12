@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
   <title>Contact Us</title>
   <style>
     /* Ensure html and body fill full height for sticky footer */
@@ -106,22 +105,30 @@
       background: #990000;
     }
     
-    .success, .error {
+    button:disabled {
+      background: #666;
+      cursor: not-allowed;
+    }
+    
+    #form-status {
       max-width: 600px;
-      margin: 0 auto 10px auto;
+      margin: 10px auto;
       padding: 10px;
       border-radius: 5px;
       text-align: center;
+      display: none;
     }
     
     .success {
       background-color: #d4edda;
       color: #155724;
+      border: 1px solid #c3e6cb;
     }
     
     .error {
       background-color: #f8d7da;
       color: #721c24;
+      border: 1px solid #f5c6cb;
     }
     
     /* Inner content container for header and footer columns */
@@ -134,8 +141,6 @@
       padding: 0 10px;
     }
   </style>
-  <!-- Load reCAPTCHA API -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
   <!-- Header -->
@@ -144,21 +149,18 @@
       <!-- Left Column (optional) -->
       <div style="flex: 1; text-align: left;">
         <div style="flex: 1; text-align: left; padding: 0 10px;">
-      <img 
-        src="At-sign-TRANS2.png" 
-        alt="Transparent at-sign graphic" 
-        width="250" 
-        height="100"/>
-    </div>
-        <!-- Add logo or text here if needed -->
+          <img 
+            src="At-sign-TRANS2.png" 
+            alt="Transparent at-sign graphic" 
+            width="250" 
+            height="100"/>
+        </div>
       </div>
       <!-- Center Column -->
       <div style="flex: 1; text-align: center;">
-        <!--content here if needed-->
       </div>
       <!-- Right Column -->
       <div style="flex: 1; text-align: right;">
-        
       </div>
     </div>
   </header>
@@ -167,24 +169,22 @@
   <main>
     <h1>Contact Us</h1>
     
-    <!-- Example success/error messages (optional) -->
-    <!--
-    <div class="success">Your message was sent successfully!</div>
-    <div class="error">Oops! Something went wrong. Please try again.</div>
-    -->
+    <div id="form-status"></div>
     
     <!-- Contact form -->
-    <form action="https://formspree.io/f/mrbedgzg" method="POST">
+    <form id="contact-form">
       <label>
         Your email:
-        <input type="email" name="email" required>
+        <input type="email" id="email" name="email" required>
       </label>
+      <div aria-hidden="true" style="position:absolute;left:-9999px;height:0;overflow:hidden">
+        <label>Website<input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
       <label>
         Your message:
-        <textarea name="message" rows="5" required></textarea>
+        <textarea id="message" name="message" rows="5" required></textarea>
       </label>
-      <!-- Additional form fields as needed -->
-      <button type="submit">Send</button>
+      <button type="submit" id="submit-btn">Send</button>
     </form>
   </main>
   
@@ -192,30 +192,80 @@
   <footer class="header-footer" id="page-footer">
     <div>
       <!-- Left Column (optional) -->
-        <div style="flex: 1; text-align: left;">
+      <div style="flex: 1; text-align: left;">
         <div style="flex: 1; text-align: left; padding: 0 10px;">
-        <img 
-  src="At-sign-TRANS2.png" 
-  alt="Transparent at-sign graphic" 
-  width="250" 
-  height="100"
-/><!-- Optional content -->
+          <img 
+            src="At-sign-TRANS2.png" 
+            alt="Transparent at-sign graphic" 
+            width="250" 
+            height="100"
+          />
+        </div>
       </div>
       <!-- Center Column -->
       <div style="flex: 1; text-align: center;">
         <p>
           <a href="about.html" style="color: #fff;">About</a> |
-          <a href="privacy-policy.html" style="color: #fff;">Privacy Policy</a> |
+          <a href="privacy-policy.html" style="color: #fff;">Privacy</a> |
+        <a href="premium.html" style="color: #fff;">Premium</a> |
           <a href="https://emailvanish.com" style="color: #fff;">Home</a>
         </p>
       </div>
       <!-- Right Column -->
       <div style="flex: 1; text-align: right;">
         <p>
-          <a href="contact.html" style="color: #fff;">Contact</a>
+          <a href="contact.html" style="color: #fff;">Contact</a> |
+        <a href="premium.html?signin=1" style="color: #fff;">Sign in</a>
         </p>
       </div>
     </div>
   </footer>
+
+  <script>
+    const contactForm = document.getElementById('contact-form');
+    const formStatus = document.getElementById('form-status');
+    const submitBtn = document.getElementById('submit-btn');
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      // Disable button and show loading state
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Sending...';
+      formStatus.style.display = 'none';
+
+      try {
+        const response = await fetch('/send-contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, message, website: (document.getElementById('website') || {}).value || '' }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          formStatus.innerText = result.success || 'Message sent successfully!';
+          formStatus.className = 'success';
+          formStatus.style.display = 'block';
+          contactForm.reset();
+        } else {
+          throw new Error(result.error || 'Failed to send message');
+        }
+      } catch (error) {
+        formStatus.innerText = error.message || 'Oops! Something went wrong. Please try again later.';
+        formStatus.className = 'error';
+        formStatus.style.display = 'block';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = 'Send';
+      }
+    });
+  </script>
+  <script src="https://aisupportforge.com/w/9a627e856ee9a58fb27d.js" async></script>
 </body>
 </html>

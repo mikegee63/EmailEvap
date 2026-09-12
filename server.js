@@ -23,13 +23,20 @@ const transporter = nodemailer.createTransport({
     path: '/usr/sbin/sendmail'
 });
 
+// EmailVanish Premium ($1.99/mo kept addresses). Config in /home/emailvanish/premium.env,
+// data in /home/emailvanish/data. Loads disabled (503s) if the env is incomplete.
+const premium = require("./lib/premium")({ transporter, redisClient });
+// Stripe verifies its signature over the RAW body, so this route must be mounted
+// before bodyParser touches anything.
+premium.mountWebhook(app, express);
+
 // Middleware to parse incoming JSON and form-encoded data
 app.use(bodyParser.json({ limit: "10mb" })); // Allow larger payloads
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 
 // Block server internals from being downloaded via the static handler
 app.use((req, res, next) => {
-  if (/^\/(server\.js|aliexpressAds\.js|package\.json|package-lock\.json|README\.md|server\.log|node_modules(\/|$))/i.test(req.path) || /\.bak(\.|$)/i.test(req.path)) {
+  if (/^\/(server\.js|aliexpressAds\.js|package\.json|package-lock\.json|README\.md|server\.log|node_modules(\/|$)|lib(\/|$))/i.test(req.path) || /\.bak(\.|$)/i.test(req.path)) {
     return res.status(403).send("Forbidden");
   }
   next();
@@ -50,9 +57,14 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Function to generate a random disposable email
+// Function to generate a random disposable email. Never hands out an address a
+// Premium subscriber has kept (4.3 billion possibilities, so a retry is rare).
 function generateRandomEmail() {
-    return `${crypto.randomBytes(4).toString("hex")}@emailvanish.com`;
+    for (let i = 0; i < 10; i++) {
+        const email = `${crypto.randomBytes(4).toString("hex")}@emailvanish.com`;
+        if (!premium.isKeptAddress(email)) return email;
+    }
+    return `${crypto.randomBytes(6).toString("hex")}@emailvanish.com`;
 }
 
 // ✅ API to Assign a Random Email Address to Users
@@ -85,12 +97,16 @@ app.post("/mailgun/webhook", async (req, res) => {
   // Remove any extraneous encoded fragment that looks like "<a href="
   bodyHtml = bodyHtml.replace(/%3Ca%20href=/gi, '');
 
-  // Sanitize the HTML without transforming <a> tags.
+  // Sanitize the HTML without transforming <a> tags. Structural tags only, no
+  // attributes except the link ones, no images (so no tracking pixels), no styles.
   bodyHtml = sanitizeHtml(bodyHtml, {
-    allowedTags: ["b", "i", "em", "strong", "a", "p", "br"],
-    allowedAttributes: { 
-      "a": ["href", "target", "rel"] 
+    allowedTags: ["b", "i", "em", "strong", "a", "p", "br", "u", "s", "hr",
+                  "h1", "h2", "h3", "h4", "ul", "ol", "li", "blockquote", "div", "span",
+                  "table", "thead", "tbody", "tr", "td", "th"],
+    allowedAttributes: {
+      "a": ["href", "target", "rel"]
     },
+    allowedSchemes: ["http", "https", "mailto"],
     // Do not perform any tag transformations.
     transformTags: {}
   });
@@ -104,9 +120,20 @@ app.post("/mailgun/webhook", async (req, res) => {
 
   if (!recipient) return res.status(400).send("Invalid recipient");
 
+  const timestamp = Date.now();
+
+  // Premium: keep it if a subscriber owns this address. Never lets the free path fail.
+  try {
+    if (premium.storeIfKept(recipient, { sender, subject, body: bodyHtml, timestamp })) {
+      console.log(`💾 Kept for Premium subscriber: ${recipient}`);
+    }
+  } catch (e) {
+    console.error("❌ Premium store failed:", e.message);
+  }
+
   // Store the cleaned email in Redis.
   const emailKey = `emails:${recipient}`;
-  const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp: Date.now() });
+  const emailData = JSON.stringify({ sender, subject, body: bodyHtml, timestamp });
   await redisClient.lPush(emailKey, emailData);
   await redisClient.expire(emailKey, 600); // Emails expire in 10 minutes
 
@@ -121,6 +148,9 @@ app.get("/get-emails", async (req, res) => {
     const messages = await redisClient.lRange(`emails:${email}`, 0, -1);
     res.json({ messages: messages.map(msg => JSON.parse(msg)) });
 });
+
+// ✅ Premium routes (/premium/*)
+premium.mountRoutes(app);
 
 // ✅ Contact Form Route
 // Per-IP throttle for the contact form. In memory on purpose: one process, and
