@@ -11,7 +11,7 @@
     "express": "^4.18.2",
     "nodemailer": "^7.0.12",
     "redis": "^4.7.0",
-    "sanitize-html": "^2.17.4",
+    "sanitize-html": "^2.17.7",
     "stripe": "^20.4.1"
   },
   "engines": {
