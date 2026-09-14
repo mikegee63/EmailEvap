@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>EmailVanish Premium Admin</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<style>
+  @font-face { font-family: 'Ubuntu'; src: url('/Ubuntu.ttf') format('truetype'); }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #1e2126; color: #e8e8e8; font-family: Ubuntu, system-ui, sans-serif; font-size: 14px; }
+  header { background: #343a44; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 3px solid #cc0000; }
+  header h1 { margin: 0; font-size: 1.1em; }
+  main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+  .btn { background: #cc0000; color: #fff; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-family: inherit; font-size: 13px; }
+  .btn:hover { background: #990000; }
+  .btn.grey { background: #4a505c; } .btn.grey:hover { background: #3a3f48; }
+  .btn.small { padding: 3px 8px; font-size: 12px; }
+  .btn:disabled { opacity: 0.5; cursor: default; }
+  input { background: #111; color: #eee; border: 1px solid #555; border-radius: 4px; padding: 7px; font-family: inherit; font-size: 14px; }
+  .login { max-width: 340px; margin: 60px auto; background: #2a2e35; padding: 24px; border-radius: 8px; border: 2px solid #cc0000; }
+  .login input { width: 100%; margin: 6px 0 12px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .tile { background: #2a2e35; border-radius: 6px; padding: 12px; }
+  .tile .n { font-size: 1.7em; font-weight: bold; color: #fff; }
+  .tile .l { color: #9aa; font-size: 0.85em; }
+  .tile.money .n { color: #4fd36b; }
+  section { background: #2a2e35; border-radius: 6px; padding: 14px; margin-bottom: 16px; }
+  section h2 { margin: 0 0 10px; font-size: 1em; color: #fff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #3a3f48; vertical-align: top; white-space: nowrap; }
+  th { color: #9aa; font-weight: normal; }
+  tr.sel { background: #343a44; }
+  tr.clickable { cursor: pointer; } tr.clickable:hover { background: #30353d; }
+  .mono { font-family: monospace; }
+  .st { padding: 1px 7px; border-radius: 9px; font-size: 11px; }
+  .st.active { background: #1f6b34; color: #dfffe6; } .st.past_due { background: #7a5a00; color: #fff3c4; }
+  .st.canceled { background: #6b1f1f; color: #ffe0e0; } .st.purged { background: #444; color: #ccc; } .st.inactive { background: #444; color: #ccc; }
+  .comp { color: #4fd36b; font-size: 11px; }
+  .muted { color: #9aa; }
+  .msg { padding: 8px 10px; border-radius: 4px; margin: 8px 0; }
+  .msg.ok { background: #1f4d2a; } .msg.bad { background: #5a1f1f; }
+  .subj { white-space: normal; max-width: 420px; }
+  .hidden { display: none !important; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  a { color: #7ab7ff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>EmailVanish Premium Admin</h1>
+  <div class="row" id="hdr-actions"><a href="/premium.html" class="muted" target="_blank">Subscriber page</a> <button class="btn grey small" id="logoutBtn" onclick="logout()">Sign out</button></div>
+</header>
+<main>
+  <div id="login" class="login hidden">
+    <h2 style="margin-top:0;">Admin sign-in</h2>
+    <form onsubmit="return login(event)">
+      <label>Username<input id="user" autocomplete="username" required></label>
+      <label>Password<input id="pass" type="password" autocomplete="current-password" required></label>
+      <button class="btn" id="loginBtn" type="submit">Sign in</button>
+    </form>
+    <div id="login-msg"></div>
+  </div>
+
+  <div id="dash" class="hidden">
+    <div class="tiles" id="tiles"></div>
+    <div id="msg"></div>
+
+    <section>
+      <h2><span>Subscribers <span class="muted" id="acct-count"></span></span>
+        <span class="row"><input id="compEmail" type="email" placeholder="email for complimentary access" style="width:260px;"><input id="compDays" type="number" value="365" min="1" style="width:70px;" title="days"><button class="btn small" onclick="grantComp()">Grant comp</button><button class="btn grey small" onclick="refresh()">Refresh</button></span></h2>
+      <div class="tablewrap"><table id="accts"><thead><tr>
+        <th>#</th><th>Email</th><th>Status</th><th>Addresses</th><th>Messages</th><th>Last mail</th><th>Period end</th><th>Created</th><th>Stripe</th>
+      </tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section id="detail" class="hidden">
+      <h2><span>Account <span id="d-title"></span></span>
+        <span class="row">
+          <button class="btn grey small" onclick="signInAs()">Sign in as</button>
+          <button class="btn grey small" id="d-status-btn" onclick="toggleStatus()"></button>
+          <button class="btn small" id="d-purge" onclick="purge(false)">Purge data</button>
+          <button class="btn small" id="d-delete" onclick="purge(true)">Purge + delete row</button>
+        </span></h2>
+      <div class="tablewrap"><table id="d-addrs"><thead><tr><th>Address</th><th>Label</th><th>Messages</th><th>Last mail</th><th>Kept since</th><th></th></tr></thead><tbody></tbody></table></div>
+      <h3 style="font-size:0.95em;margin:14px 0 6px;">Recent messages for this account</h3>
+      <div class="tablewrap"><table id="d-msgs"><thead><tr><th>When</th><th>To</th><th>From</th><th>Subject</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section>
+      <h2>Latest 100 stored messages (all subscribers)</h2>
+      <div class="tablewrap"><table id="recent"><thead><tr><th>When</th><th>To</th><th>Acct</th><th>From</th><th>Subject</th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </div>
+</main>
+<script>
+  const $ = id => document.getElementById(id);
+  let selected = null, accounts = [];
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function note(cls, text, id) { $(id || 'msg').innerHTML = text ? `<div class="msg ${cls}">${esc(text)}</div>` : ''; }
+  function when(ms) { return ms ? new Date(ms).toLocaleString() : ''; }
+  function ago(ms) { if (!ms) return '<span class="muted">never</span>'; const m = Math.round((Date.now() - ms) / 60000); return m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' d ago'; }
+  async function api(method, url, body) {
+    const opts = { method, headers: {}, credentials: 'same-origin' };
+    if (body !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+    const r = await fetch(url, opts); let d = {}; try { d = await r.json(); } catch (e) {}
+    if (r.status === 401 && !url.endsWith('/login')) { showLogin(); }
+    if (!r.ok) throw new Error(d.error || ('Request failed ' + r.status));
+    return d;
+  }
+  function showLogin() { $('login').classList.remove('hidden'); $('dash').classList.add('hidden'); $('logoutBtn').classList.add('hidden'); }
+  async function login(ev) {
+    ev.preventDefault(); $('loginBtn').disabled = true;
+    try { await api('POST', '/premium/admin/login', { user: $('user').value, pass: $('pass').value }); $('pass').value = ''; await boot(); }
+    catch (e) { note('bad', e.message, 'login-msg'); }
+    $('loginBtn').disabled = false; return false;
+  }
+  async function logout() { try { await api('POST', '/premium/admin/logout'); } catch (e) {} showLogin(); }
+
+  async function boot() {
+    try { await refresh(); $('login').classList.add('hidden'); $('dash').classList.remove('hidden'); $('logoutBtn').classList.remove('hidden'); }
+    catch (e) { showLogin(); }
+  }
+  async function refresh() {
+    const o = await api('GET', '/premium/admin/api/overview');
+    $('tiles').innerHTML = [
+      ['money', '$' + o.mrr.toFixed(2), 'MRR (paying × $1.99)'],
+      ['', o.active, 'active' + (o.comped ? ` (${o.comped} comp)` : '')],
+      ['', o.past_due, 'past due'], ['', o.canceled, 'canceled (30-day grace)'], ['', o.purged, 'purged'],
+      ['', o.addresses, 'kept addresses'], ['', o.messages, 'stored messages'], ['', o.messages_24h, 'received last 24 h'],
+      ['', o.live_sessions, 'live sessions'], ['', (o.dbBytes / 1048576).toFixed(1) + ' MB', 'database size']
+    ].map(([c, n, l]) => `<div class="tile ${c}"><div class="n">${esc(n)}</div><div class="l">${esc(l)}</div></div>`).join('');
+    accounts = (await api('GET', '/premium/admin/api/accounts')).accounts;
+    $('acct-count').textContent = `(${accounts.length})`;
+    $('accts').querySelector('tbody').innerHTML = accounts.map(a => `<tr class="clickable ${a.id === selected ? 'sel' : ''}" onclick="openAccount(${a.id})">
+      <td>${a.id}</td><td>${esc(a.email)}</td>
+      <td><span class="st ${esc(a.status)}">${esc(a.status)}</span>${a.comped ? ' <span class="comp">comp</span>' : ''}${a.cancel_at_period_end ? ' <span class="muted">cancels at period end</span>' : ''}</td>
+      <td>${a.address_count}</td><td>${a.message_count}</td><td>${ago(a.last_message_at)}</td>
+      <td>${a.current_period_end ? esc(new Date(a.current_period_end).toLocaleDateString()) : ''}</td>
+      <td>${esc(new Date(a.created_at).toLocaleDateString())}</td>
+      <td class="mono">${a.stripe_customer_id ? `<a href="https://dashboard.stripe.com/customers/${esc(a.stripe_customer_id)}" target="_blank" rel="noopener">${esc(a.stripe_customer_id)}</a>` : '<span class="muted">none</span>'}</td>
+    </tr>`).join('');
+    const rec = (await api('GET', '/premium/admin/api/messages/recent')).messages;
+    $('recent').querySelector('tbody').innerHTML = rec.map(m => `<tr><td>${esc(when(m.received_at))}</td><td class="mono">${esc(m.address)}</td><td>${m.account_id ?? ''}</td><td>${esc(m.sender)}</td><td class="subj">${esc(m.subject)}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">none yet</td></tr>';
+    if (selected) openAccount(selected, true);
+  }
+  async function openAccount(id, quiet) {
+    selected = id;
+    try {
+      const d = await api('GET', `/premium/admin/api/accounts/${id}`);
+      const a = d.account;
+      $('detail').classList.remove('hidden');
+      $('d-title').textContent = `#${a.id} ${a.email}`;
+      $('d-status-btn').textContent = a.status === 'active' || a.status === 'past_due' ? 'Force cancel (stop storing)' : 'Force active';
+      $('d-status-btn').dataset.next = a.status === 'active' || a.status === 'past_due' ? 'canceled' : 'active';
+      $('d-addrs').querySelector('tbody').innerHTML = d.addresses.map(x => `<tr><td class="mono">${esc(x.address)}</td><td>${esc(x.label || '')}</td><td>${x.total}</td><td>${ago(x.last_at)}</td><td>${esc(new Date(x.created_at).toLocaleDateString())}</td>
+        <td><button class="btn small" onclick="releaseAddr('${esc(x.address)}')">Release</button></td></tr>`).join('') || '<tr><td colspan="6" class="muted">no kept addresses</td></tr>';
+      $('d-msgs').querySelector('tbody').innerHTML = d.recent.map(m => `<tr><td>${esc(when(m.received_at))}</td><td class="mono">${esc(m.address)}</td><td>${esc(m.sender)}</td><td class="subj">${esc(m.subject)}</td></tr>`).join('') || '<tr><td colspan="4" class="muted">none</td></tr>';
+      document.querySelectorAll('#accts tbody tr').forEach(tr => tr.classList.toggle('sel', tr.firstElementChild.textContent == id));
+      if (!quiet) $('detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) { note('bad', e.message); }
+  }
+  async function signInAs() {
+    try { const r = await api('POST', `/premium/admin/api/accounts/${selected}/signin-as`, {}); window.open(r.url, '_blank'); }
+    catch (e) { note('bad', e.message); }
+  }
+  async function toggleStatus() {
+    const next = $('d-status-btn').dataset.next;
+    if (!arm($('d-status-btn'), `Really set ${next}? Click again`)) return;
+    try { await api('POST', `/premium/admin/api/accounts/${selected}/status`, { status: next }); note('ok', `Account #${selected} set to ${next}`); refresh(); }
+    catch (e) { note('bad', e.message); }
+  }
+  async function releaseAddr(addr) {
+    const btn = event.target; if (!arm(btn, 'Really release? Click again')) return;
+    try { await api('DELETE', `/premium/admin/api/addresses/${encodeURIComponent(addr)}`); note('ok', `${addr} released, its messages deleted`); refresh(); }
+    catch (e) { note('bad', e.message); }
+  }
+  async function purge(hard) {
+    const btn = hard ? $('d-delete') : $('d-purge');
+    if (!arm(btn, hard ? 'Really delete everything? Click again' : 'Really purge? Click again')) return;
+    try { await api('DELETE', `/premium/admin/api/accounts/${selected}${hard ? '?hard=1' : ''}`); note('ok', `Account #${selected} ${hard ? 'purged and deleted' : 'purged'}`); selected = null; $('detail').classList.add('hidden'); refresh(); }
+    catch (e) { note('bad', e.message); }
+  }
+  async function grantComp() {
+    try { const r = await api('POST', '/premium/admin/api/comp', { email: $('compEmail').value, days: Number($('compDays').value) }); note('ok', `Complimentary access granted to ${r.account.email} (account #${r.account.id})`); $('compEmail').value = ''; refresh(); }
+    catch (e) { note('bad', e.message); }
+  }
+  // two-click confirmation without browser dialogs
+  function arm(btn, text) {
+    if (btn.dataset.armed) { btn.dataset.armed = ''; btn.textContent = btn.dataset.orig; return true; }
+    btn.dataset.orig = btn.textContent; btn.dataset.armed = '1'; btn.textContent = text;
+    setTimeout(() => { if (btn.dataset.armed) { btn.dataset.armed = ''; btn.textContent = btn.dataset.orig; } }, 4000);
+    return false;
+  }
+  boot();
+</script>
+</body>
+</html>
