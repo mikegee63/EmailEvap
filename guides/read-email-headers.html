@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Read Email Headers to Check Who Really Sent a Message</title>
+  <meta name="description" content="Step-by-step guide to finding and reading full email headers: Received lines, Return-Path, and the SPF, DKIM and DMARC results that reveal forgeries.">
+  <link rel="canonical" href="https://emailvanish.com/guides/read-email-headers.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Read Email Headers to Check Who Really Sent a Message">
+  <meta property="og:description" content="Step-by-step guide to finding and reading full email headers: Received lines, Return-Path, and the SPF, DKIM and DMARC results that reveal forgeries.">
+  <meta property="og:url" content="https://emailvanish.com/guides/read-email-headers.html">
+  <meta property="og:site_name" content="EmailVanish">
+  <meta name="google-adsense-account" content="ca-pub-1604406379780489">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/site.css?v=2026-09-23">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How to Read Email Headers to Check Who Really Sent a Message", "description": "Step-by-step guide to finding and reading full email headers: Received lines, Return-Path, and the SPF, DKIM and DMARC results that reveal forgeries.", "url": "https://emailvanish.com/guides/read-email-headers.html", "datePublished": "2026-09-23", "dateModified": "2026-09-23", "author": {"@type": "Person", "name": "Michael Goldsmith"}, "publisher": {"@type": "Organization", "name": "EmailVanish", "url": "https://emailvanish.com"}, "mainEntityOfPage": "https://emailvanish.com/guides/read-email-headers.html"}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a href="/" aria-label="EmailVanish home"><img src="/At-sign-TRANS2.png" alt="EmailVanish" width="164" height="64"></a>
+    <nav class="site-nav" aria-label="Main"><a href="/">Home</a> <a href="/guides/" aria-current="page">Guides</a> <a href="/about.html">About</a> <a href="/premium.html">Premium</a> <a href="/contact.html">Contact</a></nav>
+  </div>
+</header>
+<main class="page">
+<article class="card">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; Reading email headers</div>
+  <h1>How to Read Email Headers to Check Who Really Sent a Message</h1>
+  <p class="meta">By Michael Goldsmith &middot; Updated September 23, 2026</p>
+<p class="lead">Every email carries a hidden section called the headers: a record of where it came from, which servers handled it and whether it passed the sender checks. The From line you normally see is easy to fake. The headers are much harder to fake convincingly, which makes them the best way to settle whether a suspicious message is genuine.</p>
+
+<h2>How to see the full headers</h2>
+<ul>
+  <li><strong>Gmail (web):</strong> open the message, click the three dots next to Reply, and choose <em>Show original</em>. Gmail shows an SPF, DKIM and DMARC summary at the top, followed by the raw headers.</li>
+  <li><strong>Outlook.com and new Outlook:</strong> open the message, click the three dots, then <em>View</em> and <em>View message source</em> (or <em>View message details</em>).</li>
+  <li><strong>Apple Mail (Mac):</strong> select the message, then <em>View</em>, <em>Message</em>, <em>All Headers</em>.</li>
+  <li><strong>Thunderbird:</strong> <em>View</em>, <em>Headers</em>, <em>All</em>, or press Ctrl+U (Cmd+U on a Mac) to see the full source.</li>
+</ul>
+<p>Mobile apps rarely show headers, so use a computer for this.</p>
+
+<h2>The headers that matter</h2>
+<p>The raw headers can run to dozens of lines. For checking a sender, only a few matter.</p>
+
+<h3>Authentication-Results</h3>
+<p>This line is added by <em>your</em> provider when the message arrives, so the sender cannot write it. It records the result of the SPF, DKIM and DMARC checks explained in our guide to <a href="/guides/how-email-works.html">how email works</a>:</p>
+<div class="example">Authentication-Results: mx.google.com;
+   dkim=pass header.i=@paypal.com;
+   spf=pass smtp.mailfrom=paypal.com;
+   dmarc=pass (p=REJECT) header.from=paypal.com</div>
+<p>What to look for: <code>dmarc=pass</code> with a <code>header.from</code> domain that is really the company's domain. That combination means the message genuinely came from servers the domain owner authorised. A result of <code>fail</code>, or a pass for some unrelated domain, is a strong warning sign.</p>
+
+<h3>From, Reply-To and Return-Path</h3>
+<ul>
+  <li><strong>From</strong> is what your app shows. Look at the address inside the angle brackets, not the display name.</li>
+  <li><strong>Reply-To</strong>, if present, is where your reply will go. A message "from" your bank with a Reply-To at a free webmail address is almost certainly a scam.</li>
+  <li><strong>Return-Path</strong> is the envelope sender, where bounces go. It often differs legitimately (newsletter platforms use their own), but it should still make sense.</li>
+</ul>
+
+<h3>Received</h3>
+<p>Each server that handles a message adds a Received line at the top. Reading them from the <em>bottom</em> up shows the route from origin to your inbox:</p>
+<div class="example">Received: from mx-out-3.example-bank.com (mx-out-3.example-bank.com [203.0.113.25])
+        by mx.google.com with ESMTPS id ...
+        for &lt;you@gmail.com&gt;; Tue, 22 Sep 2026 14:02:11 -0700 (PDT)</div>
+<p>The line added by your own provider (the top one) is the trustworthy one: it records the real address of the server that connected. Lines lower down were written by servers you cannot verify, and a forger can invent them. Check that the connecting server's name belongs to the organisation the email claims to be from.</p>
+
+<h3>Message-ID and Date</h3>
+<p>A Message-ID from a domain unrelated to the sender, or a Date wildly different from when the message arrived, are small clues that something is off. On their own they are not proof.</p>
+
+<h2>Two quick examples</h2>
+<h3>Genuine</h3>
+<div class="example">From: "Example Bank" &lt;alerts@example-bank.com&gt;
+Authentication-Results: ... dkim=pass header.i=@example-bank.com;
+   spf=pass smtp.mailfrom=bounce.example-bank.com;
+   dmarc=pass header.from=example-bank.com</div>
+<p>The visible From domain matches the domain that passed DMARC. This came from the bank's authorised systems.</p>
+<h3>Forged</h3>
+<div class="example">From: "Example Bank" &lt;alerts@example-bank.com&gt;
+Reply-To: examplebank.support@freemail.example
+Authentication-Results: ... dkim=none;
+   spf=fail smtp.mailfrom=example-bank.com;
+   dmarc=fail (p=REJECT) header.from=example-bank.com</div>
+<p>The From line claims the bank, but SPF and DMARC both fail, there is no DKIM signature, and replies would go to a free webmail account. If this reached your inbox at all, report it as phishing.</p>
+
+<h2>Limits of header checking</h2>
+<ul>
+  <li><strong>A pass only proves the domain, not the intent.</strong> A scammer who registers <code>example-bank-alerts.com</code> can set up perfect SPF, DKIM and DMARC for that lookalike domain. Always check that the domain itself is the real one.</li>
+  <li><strong>Compromised accounts pass everything.</strong> If a real colleague's mailbox is hacked, messages from it authenticate perfectly. Unusual requests still deserve a phone call.</li>
+  <li><strong>Forwarding can break SPF.</strong> A legitimate message forwarded through another service may fail SPF; DKIM usually survives, and DMARC passes if DKIM does.</li>
+</ul>
+<p>For the everyday warning signs that do not need headers at all, see <a href="/guides/spot-phishing-emails.html">How to Spot a Phishing Email</a>.</p>
+
+  <div class="related">
+    <h2>More guides</h2>
+    <div class="guide-grid">
+    <a class="guide-card" href="/guides/how-temporary-email-works.html"><strong>How temporary email works</strong><span>The journey of a message from sender to your 10-minute inbox.</span></a>
+    <a class="guide-card" href="/guides/when-to-use-temporary-email.html"><strong>When to use temporary email</strong><span>Good uses, bad uses, and a quick decision checklist.</span></a>
+    <a class="guide-card" href="/guides/spot-phishing-emails.html"><strong>Spotting phishing emails</strong><span>Ten warning signs, an annotated example, and what to do next.</span></a>
+    </div>
+    <p><a class="cta" href="/">Get a free temporary address</a></p>
+  </div>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="inner">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="/">Temporary email</a> <a href="/guides/">Guides</a> <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a> <a href="/privacy-policy.html">Privacy</a>
+      <a href="/terms.html">Terms</a> <a href="/premium.html">Premium</a>
+    </nav>
+    <p class="footer-note">&copy; 2026 EmailVanish, operated by Michael Goldsmith, New Jersey, USA.</p>
+  </div>
+</footer>
+<script src="https://aisupportforge.com/w/9a627e856ee9a58fb27d.js" async></script>
+</body>
+</html>

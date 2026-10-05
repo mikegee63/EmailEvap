@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Email Works: SMTP, MX Records, IMAP and Email Authentication</title>
+  <meta name="description" content="A clear technical walk-through of how an email travels from one inbox to another, including DNS MX records, SMTP, IMAP, POP3, SPF, DKIM and DMARC.">
+  <link rel="canonical" href="https://emailvanish.com/guides/how-email-works.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How Email Works: SMTP, MX Records, IMAP and Email Authentication">
+  <meta property="og:description" content="A clear technical walk-through of how an email travels from one inbox to another, including DNS MX records, SMTP, IMAP, POP3, SPF, DKIM and DMARC.">
+  <meta property="og:url" content="https://emailvanish.com/guides/how-email-works.html">
+  <meta property="og:site_name" content="EmailVanish">
+  <meta name="google-adsense-account" content="ca-pub-1604406379780489">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/site.css?v=2026-09-23">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How Email Works: SMTP, MX Records, IMAP and Email Authentication", "description": "A clear technical walk-through of how an email travels from one inbox to another, including DNS MX records, SMTP, IMAP, POP3, SPF, DKIM and DMARC.", "url": "https://emailvanish.com/guides/how-email-works.html", "datePublished": "2026-09-23", "dateModified": "2026-09-23", "author": {"@type": "Person", "name": "Michael Goldsmith"}, "publisher": {"@type": "Organization", "name": "EmailVanish", "url": "https://emailvanish.com"}, "mainEntityOfPage": "https://emailvanish.com/guides/how-email-works.html"}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a href="/" aria-label="EmailVanish home"><img src="/At-sign-TRANS2.png" alt="EmailVanish" width="164" height="64"></a>
+    <nav class="site-nav" aria-label="Main"><a href="/">Home</a> <a href="/guides/" aria-current="page">Guides</a> <a href="/about.html">About</a> <a href="/premium.html">Premium</a> <a href="/contact.html">Contact</a></nav>
+  </div>
+</header>
+<main class="page">
+<article class="card">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; How email works</div>
+  <h1>How Email Works: SMTP, MX Records, IMAP and Email Authentication</h1>
+  <p class="meta">By Michael Goldsmith &middot; Updated September 23, 2026</p>
+<figure style="margin:0 0 20px"><img src="/email-device.png" alt="Illustration for the guide to how email works" width="600" height="336" style="width:100%;height:auto;border-radius:6px" loading="lazy"></figure>
+<p class="lead">Sending an email feels instant and simple, but a message passes through several separate systems, each with its own job, before it reaches the recipient. This guide follows one message from Alice to Bob and explains each piece along the way: the address, DNS and MX records, SMTP, the mailbox protocols IMAP and POP3, and the authentication checks (SPF, DKIM and DMARC) that decide whether a message is trusted.</p>
+
+<h2>The parts of an email address</h2>
+<p>In <code>alice@example.com</code>, the part before the @ is the <strong>local part</strong>: it names a mailbox. The part after the @ is the <strong>domain</strong>: it tells the internet which organisation's mail servers are responsible for that mailbox. Mail servers route messages using only the domain. What happens to the local part is entirely up to the receiving domain, which is why some providers ignore dots in the local part, and why tricks like plus addressing work (see <a href="/guides/email-aliases-vs-disposable-email.html">our comparison of aliases</a>).</p>
+
+<h2>Step 1: Alice's app hands the message to her provider</h2>
+<p>Alice writes her message in an email app or webmail. When she clicks Send, the app submits it to her own provider's outgoing server. This first hop uses SMTP, the Simple Mail Transfer Protocol, on the submission port 587 (or 465 with encryption from the start). Alice's app must log in first, which stops strangers using her provider to send mail.</p>
+<p>Behind the scenes, every message has two parts: the <strong>envelope</strong> (who the servers should deliver it to, and where bounces should go) and the <strong>content</strong>, which includes headers such as From, To, Subject and Date, followed by the body. The From line people see is part of the content and, on its own, proves nothing. That gap is what email authentication (below) exists to close.</p>
+
+<h2>Step 2: finding Bob's mail server with DNS</h2>
+<p>Bob's address is <code>bob@example.org</code>. Alice's server needs to know which machine accepts mail for example.org, so it asks the Domain Name System for the domain's <strong>MX (mail exchanger) records</strong>. A typical answer looks like this:</p>
+<div class="example">example.org.   3600   IN   MX   10   mx1.example.org.
+example.org.   3600   IN   MX   20   mx2.example.org.</div>
+<p>The numbers are priorities: lower is tried first. If <code>mx1</code> is unreachable, the sender falls back to <code>mx2</code>. The 3600 is how many seconds other servers may cache the answer. If a domain has no MX record at all, senders fall back to the domain's ordinary address record.</p>
+
+<h2>Step 3: server-to-server delivery over SMTP</h2>
+<p>Alice's server connects to Bob's mail exchanger on port 25 and the two servers hold a short, plain-text conversation. Stripped down, it looks like this:</p>
+<div class="example">S: 220 mx1.example.org ESMTP ready
+C: EHLO mail.example.com
+S: 250-mx1.example.org  250-STARTTLS
+C: STARTTLS                      (the rest is now encrypted)
+C: MAIL FROM:&lt;alice@example.com&gt;
+S: 250 OK
+C: RCPT TO:&lt;bob@example.org&gt;
+S: 250 OK
+C: DATA
+S: 354 Send message
+C: (headers and body) .
+S: 250 Queued as 4F7A2C</div>
+<p>STARTTLS upgrades the connection to encryption when both sides support it, which today is the case for almost all large providers. If Bob's server is temporarily down, Alice's server keeps the message in a queue and retries for several days before giving up and sending Alice a bounce message.</p>
+
+<h2>Step 4: checks on arrival</h2>
+<p>Before accepting the message into Bob's mailbox, his provider runs checks. Three DNS-based standards do most of the work of spotting forged senders:</p>
+<h3>SPF (Sender Policy Framework)</h3>
+<p>The sending domain publishes a list of servers allowed to send its mail, as a TXT record such as <code>v=spf1 include:_spf.example.com -all</code>. The receiver checks whether the connecting server is on that list for the envelope sender's domain.</p>
+<h3>DKIM (DomainKeys Identified Mail)</h3>
+<p>The sending server signs parts of the message with a private key. The receiver fetches the matching public key from the sender's DNS and verifies the signature. A valid DKIM signature proves the message really passed through a server authorised by that domain and was not altered on the way.</p>
+<h3>DMARC (Domain-based Message Authentication, Reporting and Conformance)</h3>
+<p>SPF and DKIM each check a domain, but not necessarily the one in the visible From line. DMARC ties them to it: a message passes DMARC only if SPF or DKIM passes <em>and</em> the domain that passed matches the From address. The domain owner also publishes a policy saying what receivers should do with failures: nothing (<code>p=none</code>), send them to spam (<code>p=quarantine</code>) or refuse them (<code>p=reject</code>).</p>
+<div class="callout">Since 2024, Google and Yahoo require bulk senders to their users to have SPF, DKIM and a DMARC record in place. That has made spoofing big brands much harder, which is why modern phishing more often uses lookalike domains instead. Our <a href="/guides/spot-phishing-emails.html">phishing guide</a> shows what those look like.</div>
+<p>Providers then add their own spam filtering on top, looking at the sender's reputation, the content and the links.</p>
+
+<h2>Step 5: Bob reads his mail with IMAP or POP3</h2>
+<p>Once stored, the message waits in Bob's mailbox until his app collects it. Two protocols do that job:</p>
+<div class="table-wrap">
+<table class="compare">
+  <tr><th></th><th>IMAP</th><th>POP3</th></tr>
+  <tr><td>Where mail lives</td><td>On the server; apps show a synchronised view</td><td>Downloaded to one device, usually removed from the server</td></tr>
+  <tr><td>Several devices</td><td>Yes, folders and read status stay in sync</td><td>Poorly; each device sees a different copy</td></tr>
+  <tr><td>Encrypted port</td><td>993</td><td>995</td></tr>
+  <tr><td>Best for</td><td>Almost everyone today</td><td>A single computer with limited server storage</td></tr>
+</table>
+</div>
+<p>Webmail such as Gmail or Outlook.com skips these protocols for its own website and apps, but still offers IMAP so that other email programs can connect.</p>
+
+<h2>Where temporary email fits in</h2>
+<p>A temporary email service is a normal receiving domain with an unusual rule: it accepts mail for any local part and forgets it quickly. Steps 1 to 4 happen exactly as above; step 5 is replaced by a web page that shows the message for a few minutes. Our guide to <a href="/guides/how-temporary-email-works.html">how a temporary address works</a> walks through that process for EmailVanish specifically.</p>
+
+<h2>Key terms</h2>
+<ul>
+  <li><strong>MTA (mail transfer agent):</strong> server software that passes mail between domains, such as Postfix or Exim.</li>
+  <li><strong>MX record:</strong> the DNS entry naming a domain's incoming mail servers.</li>
+  <li><strong>Envelope sender / Return-Path:</strong> the address bounces go to; it can differ from the visible From.</li>
+  <li><strong>Bounce:</strong> an automatic message saying delivery failed, with a reason code.</li>
+  <li><strong>TLS:</strong> the encryption used between servers (via STARTTLS) and between your app and your provider.</li>
+</ul>
+
+  <div class="related">
+    <h2>More guides</h2>
+    <div class="guide-grid">
+    <a class="guide-card" href="/guides/how-temporary-email-works.html"><strong>How temporary email works</strong><span>The journey of a message from sender to your 10-minute inbox.</span></a>
+    <a class="guide-card" href="/guides/when-to-use-temporary-email.html"><strong>When to use temporary email</strong><span>Good uses, bad uses, and a quick decision checklist.</span></a>
+    <a class="guide-card" href="/guides/spot-phishing-emails.html"><strong>Spotting phishing emails</strong><span>Ten warning signs, an annotated example, and what to do next.</span></a>
+    </div>
+    <p><a class="cta" href="/">Get a free temporary address</a></p>
+  </div>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="inner">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="/">Temporary email</a> <a href="/guides/">Guides</a> <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a> <a href="/privacy-policy.html">Privacy</a>
+      <a href="/terms.html">Terms</a> <a href="/premium.html">Premium</a>
+    </nav>
+    <p class="footer-note">&copy; 2026 EmailVanish, operated by Michael Goldsmith, New Jersey, USA.</p>
+  </div>
+</footer>
+<script src="https://aisupportforge.com/w/9a627e856ee9a58fb27d.js" async></script>
+</body>
+</html>

@@ -1,271 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-  <title>Contact Us</title>
-  <style>
-    /* Ensure html and body fill full height for sticky footer */
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-    
-    /* Common styling for header and footer */
-    .header-footer {
-      position: relative;
-      background: #343a44;
-      color: #fff;
-      padding: 10px 0;
-      text-align: center;
-      width: 100%;
-      z-index: 1000;
-    }
-    /* For the header, add a white bar at the bottom */
-    header.header-footer::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -20px;  /* 20px tall white bar below the header */
-      width: 100%;
-      height: 20px;
-      background: #fff;
-      z-index: -1;
-    }
-    /* For the footer, add a white bar at the top */
-    footer.header-footer::before {
-      content: "";
-      position: absolute;
-      top: -20px;  /* 20px tall white bar above the footer */
-      left: 0;
-      width: 100%;
-      height: 20px;
-      background: #fff;
-      z-index: -1;
-    }
-    
-    /* Use flex layout on body to push footer to bottom if content is short */
-    body {
-      background: linear-gradient(to bottom, #e9e9e9 5%, #333333 60%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      font-family: Ubuntu;
-    }
-    
-    /* Main content area */
-    main {
-      flex: 1;
-      padding: 20px;
-    }
-    
-    h1 {
-      text-align: center;
-    }
-    
-    /* Form styling */
-    form {
-      max-width: 600px;
-      margin: 0 auto;
-      background: #f9f9f9;
-      border: 2px solid #ccc;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
-    }
-    
-    input[type="text"],
-    input[type="email"],
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    
-    button {
-      background: #cc0000;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 16px;
-      display: block;
-      margin: 0 auto;
-    }
-    
-    button:hover {
-      background: #990000;
-    }
-    
-    button:disabled {
-      background: #666;
-      cursor: not-allowed;
-    }
-    
-    #form-status {
-      max-width: 600px;
-      margin: 10px auto;
-      padding: 10px;
-      border-radius: 5px;
-      text-align: center;
-      display: none;
-    }
-    
-    .success {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-    
-    .error {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-    
-    /* Inner content container for header and footer columns */
-    .header-footer > div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 10px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact EmailVanish</title>
+  <meta name="description" content="Get in touch with EmailVanish about the free temporary email service, EmailVanish Premium, abuse reports or anything else.">
+  <link rel="canonical" href="https://emailvanish.com/contact.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact EmailVanish">
+  <meta property="og:description" content="Get in touch with EmailVanish about the free temporary email service, EmailVanish Premium, abuse reports or anything else.">
+  <meta property="og:url" content="https://emailvanish.com/contact.html">
+  <meta property="og:site_name" content="EmailVanish">
+  <meta name="google-adsense-account" content="ca-pub-1604406379780489">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/site.css?v=2026-09-23">
 </head>
 <body>
-  <!-- Header -->
-  <header class="header-footer">
-    <div>
-      <!-- Left Column (optional) -->
-      <div style="flex: 1; text-align: left;">
-        <div style="flex: 1; text-align: left; padding: 0 10px;">
-          <img 
-            src="At-sign-TRANS2.png" 
-            alt="Transparent at-sign graphic" 
-            width="250" 
-            height="100"/>
-        </div>
-      </div>
-      <!-- Center Column -->
-      <div style="flex: 1; text-align: center;">
-      </div>
-      <!-- Right Column -->
-      <div style="flex: 1; text-align: right;">
-      </div>
+<header class="site-header">
+  <div class="inner">
+    <a href="/" aria-label="EmailVanish home"><img src="/At-sign-TRANS2.png" alt="EmailVanish" width="164" height="64"></a>
+    <nav class="site-nav" aria-label="Main"><a href="/">Home</a> <a href="/guides/">Guides</a> <a href="/about.html">About</a> <a href="/premium.html">Premium</a> <a href="/contact.html" aria-current="page">Contact</a></nav>
+  </div>
+</header>
+<main class="page">
+<article class="card">
+  <h1>Contact EmailVanish</h1>
+  <p class="lead">Questions, problems, suggestions and abuse reports all go to the same place: the person who runs the service. Use the form below and you will normally get a reply within two business days.</p>
+
+  <h2>Before you write</h2>
+  <ul>
+    <li><strong>Waiting for a code that never arrived?</strong> Some websites block temporary addresses, and a few send slowly. Keep the page open for a couple of minutes, then try the site again with a fresh address. Our guide on <a href="/guides/why-sites-block-disposable-email.html">why sites block disposable email</a> explains what is going on.</li>
+    <li><strong>Lost a message?</strong> Free inboxes are deleted automatically ten minutes after the last message arrives, and we keep no copies, so we cannot recover them.</li>
+    <li><strong>Premium billing or sign-in?</strong> Include the email address you used at checkout. You can also manage or cancel your subscription yourself from the Premium dashboard.</li>
+    <li><strong>Reporting abuse?</strong> Tell us the EmailVanish address involved, roughly when it happened and what occurred. We take reports of fraud, harassment and other misuse seriously; see our <a href="/terms.html">acceptable use policy</a>.</li>
+  </ul>
+
+  <div class="callout">Please give us an address where you can receive our reply. An EmailVanish address will have expired long before we answer.</div>
+
+  <h2>Send a message</h2>
+  <div id="form-status"></div>
+  <form id="contact-form" class="contact-form">
+    <label for="email">Your email address</label>
+    <input type="email" id="email" name="email" required autocomplete="email">
+    <div aria-hidden="true" style="position:absolute;left:-9999px;height:0;overflow:hidden">
+      <label>Website<input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></label>
     </div>
-  </header>
-  
-  <!-- Page Content -->
-  <main>
-    <h1>Contact Us</h1>
-    
-    <div id="form-status"></div>
-    
-    <!-- Contact form -->
-    <form id="contact-form">
-      <label>
-        Your email:
-        <input type="email" id="email" name="email" required>
-      </label>
-      <div aria-hidden="true" style="position:absolute;left:-9999px;height:0;overflow:hidden">
-        <label>Website<input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></label>
-      </div>
-      <label>
-        Your message:
-        <textarea id="message" name="message" rows="5" required></textarea>
-      </label>
-      <button type="submit" id="submit-btn">Send</button>
-    </form>
-  </main>
-  
-  <!-- Footer -->
-  <footer class="header-footer" id="page-footer">
-    <div>
-      <!-- Left Column (optional) -->
-      <div style="flex: 1; text-align: left;">
-        <div style="flex: 1; text-align: left; padding: 0 10px;">
-          <img 
-            src="At-sign-TRANS2.png" 
-            alt="Transparent at-sign graphic" 
-            width="250" 
-            height="100"
-          />
-        </div>
-      </div>
-      <!-- Center Column -->
-      <div style="flex: 1; text-align: center;">
-        <p>
-          <a href="about.html" style="color: #fff;">About</a> |
-          <a href="privacy-policy.html" style="color: #fff;">Privacy</a> |
-        <a href="premium.html" style="color: #fff;">Premium</a> |
-          <a href="https://emailvanish.com" style="color: #fff;">Home</a>
-        </p>
-      </div>
-      <!-- Right Column -->
-      <div style="flex: 1; text-align: right;">
-        <p>
-          <a href="contact.html" style="color: #fff;">Contact</a> |
-        <a href="premium.html?signin=1" style="color: #fff;">Sign in</a>
-        </p>
-      </div>
-    </div>
-  </footer>
+    <label for="message">Your message</label>
+    <textarea id="message" name="message" rows="6" required></textarea>
+    <button type="submit" id="submit-btn">Send</button>
+  </form>
+  <p class="meta" style="margin-top:16px">Messages sent with this form are delivered to us by email. We use your address only to reply. See our <a href="/privacy-policy.html">privacy policy</a>.</p>
+</article>
+<script>
+  const contactForm = document.getElementById('contact-form');
+  const formStatus = document.getElementById('form-status');
+  const submitBtn = document.getElementById('submit-btn');
 
-  <script>
-    const contactForm = document.getElementById('contact-form');
-    const formStatus = document.getElementById('form-status');
-    const submitBtn = document.getElementById('submit-btn');
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const email = document.getElementById('email').value;
-      const message = document.getElementById('message').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
 
-      // Disable button and show loading state
-      submitBtn.disabled = true;
-      submitBtn.innerText = 'Sending...';
-      formStatus.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Sending...';
+    formStatus.style.display = 'none';
 
-      try {
-        const response = await fetch('/send-contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, message, website: (document.getElementById('website') || {}).value || '' }),
-        });
+    try {
+      const response = await fetch('/send-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, message, website: (document.getElementById('website') || {}).value || '' }),
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (response.ok) {
-          formStatus.innerText = result.success || 'Message sent successfully!';
-          formStatus.className = 'success';
-          formStatus.style.display = 'block';
-          contactForm.reset();
-        } else {
-          throw new Error(result.error || 'Failed to send message');
-        }
-      } catch (error) {
-        formStatus.innerText = error.message || 'Oops! Something went wrong. Please try again later.';
-        formStatus.className = 'error';
+      if (response.ok) {
+        formStatus.innerText = result.success || 'Message sent successfully!';
+        formStatus.className = 'success';
         formStatus.style.display = 'block';
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'Send';
+        contactForm.reset();
+      } else {
+        throw new Error(result.error || 'Failed to send message');
       }
-    });
-  </script>
-  <script src="https://aisupportforge.com/w/9a627e856ee9a58fb27d.js" async></script>
+    } catch (error) {
+      formStatus.innerText = error.message || 'Oops! Something went wrong. Please try again later.';
+      formStatus.className = 'error';
+      formStatus.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'Send';
+    }
+  });
+</script>
+</main>
+<footer class="site-footer">
+  <div class="inner">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="/">Temporary email</a> <a href="/guides/">Guides</a> <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a> <a href="/privacy-policy.html">Privacy</a>
+      <a href="/terms.html">Terms</a> <a href="/premium.html">Premium</a>
+    </nav>
+    <p class="footer-note">&copy; 2026 EmailVanish, operated by Michael Goldsmith, New Jersey, USA.</p>
+  </div>
+</footer>
+<script src="https://aisupportforge.com/w/9a627e856ee9a58fb27d.js" async></script>
 </body>
 </html>

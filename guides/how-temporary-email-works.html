@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How a Temporary Email Address Actually Works</title>
+  <meta name="description" content="What happens between a website sending a message and it appearing in your EmailVanish inbox, why addresses expire, and what that means for your privacy.">
+  <link rel="canonical" href="https://emailvanish.com/guides/how-temporary-email-works.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How a Temporary Email Address Actually Works">
+  <meta property="og:description" content="What happens between a website sending a message and it appearing in your EmailVanish inbox, why addresses expire, and what that means for your privacy.">
+  <meta property="og:url" content="https://emailvanish.com/guides/how-temporary-email-works.html">
+  <meta property="og:site_name" content="EmailVanish">
+  <meta name="google-adsense-account" content="ca-pub-1604406379780489">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/site.css?v=2026-09-23">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1604406379780489" crossorigin="anonymous"></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "How a Temporary Email Address Actually Works", "description": "What happens between a website sending a message and it appearing in your EmailVanish inbox, why addresses expire, and what that means for your privacy.", "url": "https://emailvanish.com/guides/how-temporary-email-works.html", "datePublished": "2026-09-23", "dateModified": "2026-09-23", "author": {"@type": "Person", "name": "Michael Goldsmith"}, "publisher": {"@type": "Organization", "name": "EmailVanish", "url": "https://emailvanish.com"}, "mainEntityOfPage": "https://emailvanish.com/guides/how-temporary-email-works.html"}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a href="/" aria-label="EmailVanish home"><img src="/At-sign-TRANS2.png" alt="EmailVanish" width="164" height="64"></a>
+    <nav class="site-nav" aria-label="Main"><a href="/">Home</a> <a href="/guides/" aria-current="page">Guides</a> <a href="/about.html">About</a> <a href="/premium.html">Premium</a> <a href="/contact.html">Contact</a></nav>
+  </div>
+</header>
+<main class="page">
+<article class="card">
+  <div class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/guides/">Guides</a> &rsaquo; How temporary email works</div>
+  <h1>How a Temporary Email Address Actually Works</h1>
+  <p class="meta">By Michael Goldsmith &middot; Updated September 23, 2026</p>
+<p class="lead">A temporary email address looks like magic: you open a page, an address appears, and a few seconds after a website sends you a code it shows up on screen. Nothing about it is magic, though. It is ordinary internet email with one deliberate difference: the service forgets everything after a short time. This guide follows a single message through EmailVanish so you know exactly what happens to it, and what that means for your privacy.</p>
+
+<h2>Step 1: an address is created for you</h2>
+<p>When you open the EmailVanish home page, your browser asks our server for a new address. The server picks eight random characters (for example <code>3f9a0c1e@emailvanish.com</code>), checks that nobody else is currently using that address, and remembers it for ten minutes. There is no account, no password and no name attached to it. The only link between you and the address is a random identifier stored in your own browser, so that refreshing the page shows you the same inbox instead of a new one.</p>
+<p>Random addresses matter. A short, guessable address like <code>test@</code> or <code>john@</code> would be shared by everyone who typed it, and they would all see each other's mail. Eight random hexadecimal characters give over four billion possibilities, which makes stumbling onto someone else's live inbox very unlikely.</p>
+
+<h2>Step 2: the sending website looks up where to deliver</h2>
+<p>You paste the address into a sign-up form and the website sends its confirmation message. The sender's mail server does not know or care that the address is temporary. It does what it would do for any address: it asks the Domain Name System (DNS) for the <strong>MX record</strong> of the part after the @ sign. The MX record for emailvanish.com names the mail servers that accept messages for our domain.</p>
+<p>This is also why temporary email works at all: the domain is real, its DNS is real, and it accepts mail for any address at that domain. That setting is called a catch-all. A normal company domain rejects mail for people who do not work there, but a temporary email domain accepts every name, because any name might be an address someone is using right now.</p>
+
+<h2>Step 3: the message is received and cleaned</h2>
+<p>Our inbound mail provider accepts the message over SMTP, the standard protocol every mail server speaks, and passes it to the EmailVanish server over an encrypted web connection. Before anything is stored, the server cleans the message:</p>
+<ul>
+  <li><strong>Images are removed.</strong> Many marketing emails contain an invisible one-pixel image. When your screen loads it, the sender learns that the address is live, when you opened the message and roughly where you are. Removing images means those tracking pixels never load.</li>
+  <li><strong>Scripts and styling are removed.</strong> Only simple formatting survives: paragraphs, bold and italic text, lists, tables and links.</li>
+  <li><strong>Links are kept</strong>, because the whole point is usually to click a confirmation link. They open in a new tab and do not tell the destination which page you came from.</li>
+</ul>
+
+<h2>Step 4: your inbox picks it up</h2>
+<p>The cleaned message is stored in an in-memory database under your address. Your open browser tab checks for new mail every fifteen seconds, so a message normally appears within a quarter of a minute of arriving. Messages are never copied into an archive, a mailbox file or a backup.</p>
+
+<h2>Step 5: everything expires</h2>
+<p>Each stored message carries a ten-minute expiry. When that time passes, the database deletes it automatically, and your browser's link to the address ends when your ten minutes run out. The <em>Reset Timer</em> button starts over with a brand-new address and a fresh ten minutes, which is handy when you want a clean inbox for the next sign-up. After expiry there is nothing left to hand over, leak or sell: no inbox, no copy and no backup.</p>
+<div class="callout good">If you need an address to keep receiving mail for longer, for example for a trial that emails you a receipt next week, <a href="/premium.html">EmailVanish Premium</a> keeps chosen addresses active for as long as you subscribe. Premium addresses are still receive-only.</div>
+
+<h2>What temporary email does not do</h2>
+<p>Understanding the limits is as important as understanding the mechanics.</p>
+<ul>
+  <li><strong>It is receive-only.</strong> You cannot send or reply from an EmailVanish address. That is deliberate: a service that let anyone send anonymous mail would quickly be used for spam.</li>
+  <li><strong>It is not private from someone who knows the address.</strong> There is no password, so anyone who has your exact address can open its inbox while it exists. Treat a temporary inbox like a postcard, not a sealed letter. Never use one for bank statements, medical results, password resets for important accounts or anything else you would not want a stranger to read.</li>
+  <li><strong>It does not encrypt email in transit</strong> beyond what the sending server chooses to do. Most large senders use TLS encryption between mail servers today, but that is their choice, not ours.</li>
+  <li><strong>It cannot recover anything.</strong> Once a message expires it is gone for good. If a website later emails a password reset to that address, you will not receive it.</li>
+</ul>
+
+<h2>Why the design is built around forgetting</h2>
+<p>Most online services earn money by keeping data. A temporary inbox protects you by doing the opposite. Your real address never enters the website's database, so it cannot end up on their marketing list, be sold, or leak in their next data breach. And because we keep nothing beyond ten minutes, there is nothing about you to leak from us either. For more on how exposed addresses get abused, read <a href="/guides/data-breaches-and-your-email.html">Data Breaches and Your Email Address</a>, and for a decision checklist see <a href="/guides/when-to-use-temporary-email.html">When to Use a Temporary Email Address</a>.</p>
+
+  <div class="related">
+    <h2>More guides</h2>
+    <div class="guide-grid">
+    <a class="guide-card" href="/guides/when-to-use-temporary-email.html"><strong>When to use temporary email</strong><span>Good uses, bad uses, and a quick decision checklist.</span></a>
+    <a class="guide-card" href="/guides/spot-phishing-emails.html"><strong>Spotting phishing emails</strong><span>Ten warning signs, an annotated example, and what to do next.</span></a>
+    <a class="guide-card" href="/guides/how-email-works.html"><strong>How email works</strong><span>SMTP, MX records, IMAP and the security checks in between.</span></a>
+    </div>
+    <p><a class="cta" href="/">Get a free temporary address</a></p>
+  </div>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="inner">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="/">Temporary email</a> <a href="/guides/">Guides</a> <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a> <a href="/privacy-policy.html">Privacy</a>
+      <a href="/terms.html">Terms</a> <a href="/premium.html">Premium</a>
+    </nav>
+    <p class="footer-note">&copy; 2026 EmailVanish, operated by Michael Goldsmith, New Jersey, USA.</p>
+  </div>
+</footer>
+<script src="https://aisupportforge.com/w/9a627e856ee9a58fb27d.js" async></script>
+</body>
+</html>
